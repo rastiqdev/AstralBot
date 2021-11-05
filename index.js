@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
+// COMMANDS
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -13,23 +14,16 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
-client.once('ready', () => {
-	console.log('Connecté en tant que ' + client.user.username + "#" + client.user.discriminator + ' !');
-});
+// EVENTS
+const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
-
-	const command = client.commands.get(interaction.commandName);
-
-	if (!command) return;
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		return interaction.reply({ content: 'Une erreur s\'est produite pendant l\'exécution de cette commande !', ephemeral: true });
+for (const file of eventFiles) {
+	const event = require(`./events/${file}`);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
 	}
-});
+}
 
 client.login(process.env.TOKEN);
