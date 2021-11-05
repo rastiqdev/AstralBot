@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageButton } = require('discord.js');
+const { MessageButton, MessageActionRow, Permissions } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('kick')
 		.setDescription('Expulser un membre.')
 		.addUserOption(option => option.setName('utilisateur').setDescription('Le membre à expulser').setRequired(true)),
-	async execute(interaction) {
+	async execute(client, interaction) {
 		const author = interaction.member;
 		const user = interaction.options.getMember('utilisateur');
 		const row = new MessageActionRow()
@@ -15,7 +15,7 @@ module.exports = {
 					.setCustomId('oui')
 					.setLabel('Oui')
 					.setStyle('SUCCESS'),
-				new MessaegeButton()
+				new MessageButton()
 					.setCustomId('non')
 					.setLabel('Non')
 					.setStyle('DANGER'),

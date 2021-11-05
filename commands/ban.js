@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageButton } = require('discord.js');
+const { MessageButton, MessageActionRow, Permissions } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('ban')
 		.setDescription('Bannir un membre.')
 		.addUserOption(option => option.setName('utilisateur').setDescription('Le membre à bannir').setRequired(true)),
-	async execute(interaction) {
+	async execute(client, interaction) {
 		const author = interaction.member;
 		const user = interaction.options.getMember('utilisateur');
 		const row = new MessageActionRow()
@@ -15,7 +15,7 @@ module.exports = {
 					.setCustomId('oui')
 					.setLabel('Oui')
 					.setStyle('SUCCESS'),
-				new MessaegeButton()
+				new MessageButton()
 					.setCustomId('non')
 					.setLabel('Non')
 					.setStyle('DANGER'),
@@ -30,7 +30,7 @@ module.exports = {
 
 		collector.on('collect', async i => {
 			if (i.customId === 'oui') {
-				user.kick()
+				user.ban()
 				await i.update({ content: 'Vous avez banni ' + user.user.username + "#" + user.user.discriminator + ' avec succès !', components: [] });
 			}else{
 				await i.update({ content: 'Opération annulée !', components: [] });
