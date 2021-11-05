@@ -6,7 +6,7 @@ module.exports = {
 		.setName('userinfo')
 		.setDescription('Avoir des informations à propos de quelqu\'un.')
 		.addUserOption(option => option.setName('utilisateur').setDescription('Utilisateur dont les informations doivent être montrées').setRequired(true)),
-	async execute(interaction) {
+	async execute(client, interaction) {
 		const user = interaction.options.getUser('utilisateur');
 		const reply = new MessageEmbed()
 			.setColor('#0099ff')

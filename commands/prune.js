@@ -5,7 +5,7 @@ module.exports = {
 		.setName('delete')
 		.setDescription('Supprimer jusqu\'à 99 messages.')
 		.addIntegerOption(option => option.setName('nombre').setDescription('Nombre de messages à supprimer.').setRequired(true)),
-	async execute(interaction) {
+	async execute(client, interaction) {
 		const amount = interaction.options.getInteger('nombre');
 
 		if (amount <= 1 || amount > 100) {
