@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, Client } = require('@discordjs/builders');
+const { SlashCommandBuilder, Client, Intents } = require('@discordjs/builders');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 module.exports = {
