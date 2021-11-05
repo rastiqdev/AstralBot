@@ -1,4 +1,5 @@
-const { SlashCommandBuilder, MessageEmbed } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,10 +10,9 @@ module.exports = {
 			.setColor('#0099ff')
 			.setTitle('Informations du serveur')
 			.setAuthor('AstralBot')
-			.setThumbnail(interaction.getUser('utilisateur').displayAvatarURL())
 			.addFields(
-				{ name: 'Nom du serveur', value: interaction.guild.name},
-				{ name: 'Nombre de membres', value: interaction.guild.memberCount},
+				{ name: 'Nom du serveur', value: `${interaction.guild.name}`},
+				{ name: 'Nombre de membres', value: `${interaction.guild.memberCount}`},
 			)
 			.setTimestamp()
 			.setFooter('Demandé par ' + interaction.user.username + "#" + interaction.user.discriminator, interaction.user.displayAvatarURL);

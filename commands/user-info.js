@@ -1,4 +1,5 @@
-const { SlashCommandBuilder, MessageEmbed } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -6,12 +7,12 @@ module.exports = {
 		.setDescription('Avoir des informations à propos de quelqu\'un.')
 		.addUserOption(option => option.setName('utilisateur').setDescription('Utilisateur dont les informations doivent être montrées')),
 	async execute(interaction) {
-		const user = interaction.getUser('utilisateur');
+		const user = interaction.options.getUser('utilisateur');
 		const reply = new MessageEmbed()
 			.setColor('#0099ff')
 			.setTitle('Informations d\'utilisateur')
 			.setAuthor('AstralBot')
-			.setThumbnail(interaction.getUser('utilisateur').displayAvatarURL())
+			.setThumbnail(interaction.options.getUser('utilisateur').displayAvatarURL())
 			.addFields(
 				{ name: 'Utilisateur', value: user.username + "#" + user.discriminator},
 				{ name: 'ID', value: user.id},

@@ -16,6 +16,6 @@ module.exports = {
 			interaction.reply({ content: 'Je n\'ai pas pu supprimer les messages dans ce salon !', ephemeral: true });
 		});
 
-		return interaction.reply({ content: `\`${amount}\` messages ont été supprimés.`, ephemeral: true });
+		return interaction.reply({ content: `\`${amount}\` messages ont été supprimés.`});
 	},
 };
