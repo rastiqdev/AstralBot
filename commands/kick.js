@@ -5,7 +5,8 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('kick')
 		.setDescription('Expulser un membre.')
-		.addUserOption(option => option.setName('utilisateur').setDescription('Le membre à expulser').setRequired(true)),
+		.addUserOption(option => option.setName('utilisateur').setDescription('Le membre à expulser').setRequired(true))
+		.addStringOption(option => option.setName('raison').setDescription('La raison pour laquelle bannir le membre').setRequired(true)),
 	async execute(client, interaction) {
 		const author = interaction.member;
 		const user = interaction.options.getMember('utilisateur');
@@ -28,9 +29,12 @@ module.exports = {
 
 		const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
 
+		const reason = interaction.options.getString('raison');
+
 		collector.on('collect', async i => {
 			if (i.customId === 'oui') {
-				user.kick()
+				interaction.member.send('Vous avez été kick pour ' + reason + '.');
+				user.kick(reason)
 				await i.update({ content: 'Vous avez expulsé ' + user.user.username + "#" + user.user.discriminator + ' avec succès !', components: [] });
 			}else{
 				await i.update({ content: 'Opération annulée !', components: [] });

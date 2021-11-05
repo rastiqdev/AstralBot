@@ -1,8 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
-const Canvas = require('canvas');
-Canvas.registerFont('fonts/Roboto.ttf', { family: 'Roboto' });
-Canvas.registerFont('fonts/sans.ttf', { family: 'Sans' });
+const { MessageEmbed,MessageActionRow,MessageButton } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -11,25 +8,18 @@ module.exports = {
 	async execute(client, interaction) {
 		const user = interaction.user;
 		const embed = new MessageEmbed()
-			.setTitle(`Nouvelle suggetion de ${user.username}#${user.discriminator}`)
+			.setTitle(`Vérification`)
 			.setColor("#0099ff")
-			.setDescription(`${interaction.options.getString('chose')}`)
-			.setFooter("Créez un thread pour débattre des suggestions !")
-			.setTimestamp(Date.now())
-			.setThumbnail(`${user.avatarURL({ dynamic: true })}`)
-			const channel = client.channels.cache.get('906186926208479273');
+			.setDescription(`Veuillez cliquer sur le bouton ci-dessous pour avoir accès au serveur !`)
 			const row = new MessageActionRow()
 			.addComponents(
 				new MessageButton()
-					.setStyle("DANGER")
-					.setLabel("Supprimer")
-					.setEmoji("🗑️")
-					.setCustomId("delete_suggestion")
+					.setStyle("SUCCESS")
+					.setLabel("Vérification")
+					.setCustomId("commencer")
 			)
-			channel.send({embeds: [embed], components: [row]}).then(async msg => {
-				await msg.react(":upvote:906184895611682826")
-				await msg.react(":downvote:906184926146216006")
-				interaction.reply({content: "Suggestion envoyée !", ephemeral: true})
+			interaction.channel.send({embeds: [embed], components: [row]}).then(async () => {
+				interaction.reply({content: "Panel envoyé !", ephemeral: true})
 			})
 	},
 };

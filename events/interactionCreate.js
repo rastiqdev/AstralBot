@@ -1,4 +1,8 @@
 const {Permissions} = require("discord.js");
+const Canvas = require('canvas');
+const Discord = require('discord.js');
+Canvas.registerFont('fonts/Roboto.ttf', { family: 'Roboto' });
+Canvas.registerFont('fonts/sans.ttf', { family: 'Sans' });
 
 getCaptcha = function() {
 	const canvas = Canvas.createCanvas(400, 180);
@@ -76,30 +80,24 @@ module.exports = {
             }
         } else if (interaction.isButton()) {
             if (interaction.customId === "commencer") {
-                const clear = function(channel) {
-                    channel.bulkDelete(channel.messages.cache.size - 1)
-                }
+                var invalid = 0;
                 interaction.member.roles.add("906150394940489749")
-                const captcha = client.captcha();
-
-                interaction.channel.send(`${interaciton.user}, veuillez écrire ce captcha pour procéder à la vérification.`, {
+                const captcha = getCaptcha();
+                const { buffer } = captcha;
+                const file = new Discord.MessageAttachment(buffer);
+                const toggle = true;
+                interaction.reply({
+                    content: `${interaction.user}, veuillez écrire ce captcha pour procéder à la vérification.`,
                     files: [
-                        {
-                            name: 'captcha.png',
-                            attachment: buffer
-                        }
-                    ]
+                        file
+                    ], ephemeral: true
                 });
 
                 let filter = m => m.author.id === interaction.user.id;
 
-                let collector = new Discord.MessageCollector(channel, filter, {
-                    max: 11,
-                    time: 60000
-                });
+                let collector = interaction.channel.createMessageCollector({ filter, time: 60000 });
                 let fuckterval = setInterval(() => {
                     if (!interaction.guild.members.cache.get(interaction.user.id)) {
-                        clear(interaction.channel)
                         collector.stop();
                     }
                 }, 3000);
@@ -108,35 +106,42 @@ module.exports = {
                     if (!message.content) return;
                     let num = 1;
                     let time = num++;
+                    message.delete();
                     if (message.content != captcha.text) {
                         invalid++;
-                        if (invalid > 9 && toggle === true) {
+                        if (invalid > 2 && toggle === true) {
                             if (interaction.member.kickable) {
-                                message.channel.send(
-                                    ':x: | **Trop d\'essais de captcha, kick de l\'utilisateur.**'
-                                );
+                                interaction.followUp({
+                                    content: ':x: | **Trop d\'essais de captcha, kick de l\'utilisateur.**',
+                                    ephemeral: true
+                                });
+                                interaction.member.send('Vous avez été kick pour trop d\'essais de captcha invalides');
                                 interaction.member.kick('Trop d\'essais de captcha invalides');
-                                clear(interaction.channel)
                                 return;
                             }
                             collector.stop();
                             return;
                         }
-                        message.channel.send(
-                            `:x: | **Code invalide, veuillez réessayer. Il vous reste ${10 - invalid} essais**`
-                        );
+                        interaction.followUp({
+                            content: `:x: | **Code invalide, veuillez réessayer. Il vous reste ${3 - invalid} essais**`,
+                            ephemeral: true
+                        });
                     }
                     if (message.content === captcha.text) {
                         try {
-                            message.channel.send('✅ | **Vérifié**');
+                            interaction.followUp({
+                                content: '✅ | **Vérifié**',
+                                ephemeral: true
+                            });
                             message.member.roles.remove("906150394940489749")
                             message.member.roles.add("906149050510876674");
-                            clear(interaction.channel)
                             collector.stop();
                         } catch {
-                            clear(interaction.channel)
                             collector.stop();
-                            message.channel.send(':x: | **Une erreur est survenue**');
+                            interaction.followUp({
+                                content: ':x: | **Une erreur est survenue**',
+                                ephemeral: true
+                            });
                         }
                     }
                 });
@@ -144,11 +149,11 @@ module.exports = {
                     clearInterval(fuckterval);
                     if (reason === 'time' && toggle === true) {
                         if (interaction.member.kickable) {
-                            interaction.channel.send(
-                                `**L\'utilisateur à été kick pour ne pas avoir répondu à temps.**`
-                            );
+                            interaction.followUp({
+                                content: '**L\'utilisateur à été kick pour ne pas avoir répondu à temps.**',
+                                ephemeral: true
+                            });
                             interaction.member.kick('N\'a pas répondu au captcha à temps');
-                            clear(interaction.channel)
                             return;
                         }
                         return;
