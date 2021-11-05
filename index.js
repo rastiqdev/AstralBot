@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-const { token } = require('./config.json');
+const dotenv = require("dotenv")
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
@@ -31,4 +31,6 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
-client.login(token);
+dotenv.config()
+if (!process.env.DISCORD_BOT_TOKEN) console.log("La variable d'environment 'DISCORD_BOT_TOKEN' n'existe pas.")
+else client.login(process.env.DISCORD_BOT_TOKEN);
