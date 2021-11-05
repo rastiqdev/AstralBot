@@ -7,6 +7,7 @@ module.exports = {
 		.setName('ping')
 		.setDescription('Avoir le ping du bot.'),
 	async execute(interaction) {
-		return interaction.reply('Pong ! 🏓 ~' + client.ws.ping);
+		const sent = await interaction.reply({ content: 'Ping en cours...', fetchReply: true });
+		interaction.editReply(`Pong ! 🏓 ${sent.createdTimestamp - interaction.createdTimestamp}ms`);
 	},
 };
