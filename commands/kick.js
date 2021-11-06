@@ -24,7 +24,7 @@ module.exports = {
 		if (!author.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
 			return interaction.reply({ content: `Vous n'avez pas le droit d'exécuter cette commande !`, ephemeral: true })
 		}
-		interaction.reply({ content: 'Voulez-vous expulser ' + user.user.username + "#" + user.user.discriminator + ' ?', components: [row] })
+		interaction.reply({ content: 'Voulez-vous expulser ' + user.user.username + "#" + user.user.discriminator + ' ?', components: [row], ephemeral: true })
 		const filter = i => i.user.id === author.id;
 
 		const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
@@ -33,8 +33,8 @@ module.exports = {
 
 		collector.on('collect', async i => {
 			if (i.customId === 'oui') {
-				interaction.member.send('Vous avez été kick pour ' + reason + '.');
-				user.kick(reason)
+				await user.send('Vous avez été kick de ' + interaction.guild.name + ' pour ' + reason + '.');
+				user.kick({reason: reason})
 				await i.update({ content: 'Vous avez expulsé ' + user.user.username + "#" + user.user.discriminator + ' avec succès !', components: [] });
 			}else{
 				await i.update({ content: 'Opération annulée !', components: [] });
