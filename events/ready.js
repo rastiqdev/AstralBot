@@ -1,28 +1,44 @@
 module.exports = {
     name: "ready",
     once: true,
-    execute(client) {
+    async execute(client) {
         console.log('Connecté en tant que ' + client.user.username + "#" + client.user.discriminator + ' !');
 
-        setInterval(async () => {
-            client.user?.setPresence({
-                afk: false,
+        const activities = [
+            "s'abonner à Astral",
+            `${(await client.guilds.fetch(process.env.GUILDID)).memberCount} membres ! 🎉`,
+            `RASTIQ & Léo-21`
+        ]
+
+        const activprefix = [
+            "PLAYING",
+            "WATCHING",
+            "WATCHING"
+        ]
+
+        const setPresence = function(number) {
+            client.user.setPresence({
                 status: "dnd",
-                activities: [
-                    {
-                        name: "s'abonner à Astral",
-                        type: "PLAYING"
-                    },
-                    {
-                        name: `${(await client.guilds.fetch(process.env.GUILDID)).memberCount} membres ! 🎉`,
-                        type: "WATCHING"
-                    },
-                    {
-                        name: `RASTIQ & Léo-21`,
-                        type: "WATCHING"
-                    },
-                ]
+                activities: [{ name: activities[number], type: activprefix[number] }],
             })
-        }, 10000)
+        }
+
+        setPresence(1)
+        setTimeout(function(){ 
+            setPresence(2)
+            setTimeout(function(){
+                setPresence(3)
+            }, 10000);
+        }, 10000);
+
+        setInterval(async () => {
+            setPresence(1)
+            setTimeout(function(){ 
+                setPresence(2)
+                setTimeout(function(){
+                    setPresence(3)
+                }, 10000);
+            }, 10000);
+        }, 30000)
     }
 }
