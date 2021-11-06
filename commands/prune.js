@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { Permissions } = require('discord.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -6,6 +7,11 @@ module.exports = {
 		.setDescription('Supprimer jusqu\'à 99 messages.')
 		.addIntegerOption(option => option.setName('nombre').setDescription('Nombre de messages à supprimer.').setRequired(true)),
 	async execute(client, interaction) {
+		const author = interaction.member;
+		if (!author.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
+			return interaction.reply({ content: `Vous n'avez pas le droit d'exécuter cette commande !`, ephemeral: true })
+		}
+
 		const amount = interaction.options.getInteger('nombre');
 
 		if (amount <= 1 || amount > 100) {

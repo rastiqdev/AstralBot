@@ -1,11 +1,15 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed,MessageActionRow,MessageButton } = require('discord.js');
+const { MessageEmbed,MessageActionRow,MessageButton,Permissions } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('verifypanel')
 		.setDescription('Envoie un panel pour les vérifs.'),
 	async execute(client, interaction) {
+		const author = interaction.member;
+		if (!author.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+			return interaction.reply({ content: `Vous n'avez pas le droit d'exécuter cette commande !`, ephemeral: true })
+		}
 		const user = interaction.user;
 		const embed = new MessageEmbed()
 			.setTitle(`Vérification`)
