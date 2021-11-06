@@ -10,11 +10,15 @@ module.exports = {
                 status: "online",
                 activities: [
                     {
-                        name: "m'abonner à astral et à activer la cloche 🔔",
+                        name: "s'abonner à Astral",
                         type: "PLAYING"
                     },
                     {
                         name: `${(await client.guilds.fetch(process.env.GUILDID)).memberCount} membres ! 🎉`,
+                        type: "WATCHING"
+                    },
+                    {
+                        name: `RASTIQ & Léo-21`,
                         type: "WATCHING"
                     },
                 ]
