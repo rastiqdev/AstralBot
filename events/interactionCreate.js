@@ -1,11 +1,11 @@
-const {Permissions} = require("discord.js");
+const {Permissions, MessageEmbed, MessageAttachment, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const Canvas = require('canvas');
-const Discord = require('discord.js');
 Canvas.registerFont('fonts/Roboto.ttf', { family: 'Roboto' });
 Canvas.registerFont('fonts/sans.ttf', { family: 'Sans' });
 
 getCaptcha = function() {
-	const canvas = Canvas.createCanvas(400, 180);
+	let i;
+    const canvas = Canvas.createCanvas(400, 180);
 	const ctx = canvas.getContext('2d');
 	const num = 5;
 	const cords = [];
@@ -15,28 +15,26 @@ getCaptcha = function() {
 	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	const charactersLength = characters.length;
 	// Random code generation
-	for (var i = 0; i < 5; i++) {
+	for (i = 0; i < 5; i++) {
 		string += characters.charAt(Math.floor(Math.random() * charactersLength));
 	}
 	ctx.font = 'bold 100px Roboto';
 	ctx.lineWidth = 7.5;
 	let textPos = 45;
 	// Captcha text
-	for (var i = 0; i < string.length; i++) {
+	for (i = 0; i < string.length; i++) {
 		const char = string.charAt(i);
-		const color = colors[Math.floor(Math.random() * colors.length)];
-		ctx.fillStyle = color;
+        ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
 		ctx.fillText(char, textPos, 120);
 		textPos += 65;
 	}
 	// Paticles
-	for (var i = 0; i < particles; i++) {
+	for (i = 0; i < particles; i++) {
 		const pos = {
 			width: Math.floor(Math.random() * canvas.width),
 			height: Math.floor(Math.random() * canvas.height)
 		};
-		const color = colors[Math.floor(Math.random() * colors.length)];
-		ctx.fillStyle = color;
+        ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
 		ctx.beginPath();
 		ctx.arc(pos.width, pos.height, 3.5, 0, Math.PI * 2);
 		ctx.closePath();
@@ -44,13 +42,13 @@ getCaptcha = function() {
 	}
 	// Get the cords
 	let x = 0;
-	for (var i = 0; i < num + 1; i++) {
+	for (i = 0; i < num + 1; i++) {
 		const l = Math.floor(Math.random() * canvas.height);
-		if (i != 0) x += canvas.width / num;
+		if (i !== 0) x += canvas.width / num;
 		cords.push([x, l]);
 	}
 	// Strokes
-	for (var i = 0; i < cords.length; i++) {
+	for (i = 0; i < cords.length; i++) {
 		const cord = cords[i];
 		const nextCord = cords[i + 1];
 		const color = colors[Math.floor(Math.random() * colors.length)];
@@ -80,17 +78,23 @@ module.exports = {
             }
         } else if (interaction.isButton()) {
             if (interaction.customId === "commencer") {
-                var invalid = 0;
-                interaction.member.roles.add("906150394940489749")
+                let invalid = 0;
                 const captcha = getCaptcha();
                 const { buffer } = captcha;
-                const file = new Discord.MessageAttachment(buffer);
                 const toggle = true;
-                interaction.reply({
-                    content: `${interaction.user}, veuillez écrire ce captcha pour procéder à la vérification.`,
-                    files: [
-                        file
-                    ], ephemeral: true
+                const attachment = new MessageAttachment(buffer, "captcha.png")
+                const embed = new MessageEmbed()
+                    .setTitle("(1/2) · Vérification anti-robot")
+                    .setDescription("Vous n'êtes pas un robot ? Alors prouvez-le ! Pour cela, écrivez les lettres que " +
+                        "vous voyez sur l'image ci-dessous, rien de plus simple !")
+                    .setImage("attachment://captcha.png")
+                    .setColor("#0099ff")
+                    .setTimestamp(Date.now())
+                await interaction.channel.permissionOverwrites.create(interaction.member, { SEND_MESSAGES: true })
+                await interaction.reply({
+                    embeds: [embed],
+                    ephemeral: true,
+                    files: [attachment]
                 });
 
                 let filter = m => m.author.id === interaction.user.id;
@@ -106,38 +110,34 @@ module.exports = {
                     if (!message.content) return;
                     let num = 1;
                     let time = num++;
-                    message.delete();
-                    if (message.content != captcha.text) {
+                    await message.delete();
+                    if (message.content !== captcha.text) {
                         invalid++;
                         if (invalid > 2 && toggle === true) {
                             if (interaction.member.kickable) {
-                                interaction.followUp({
+                                await interaction.followUp({
                                     content: ':x: | **Trop d\'essais de captcha, kick de l\'utilisateur.**',
                                     ephemeral: true
                                 });
                                 interaction.member.send('Vous avez été kick pour trop d\'essais de captcha invalides');
-                                interaction.member.kick('Trop d\'essais de captcha invalides');
+                                await interaction.member.kick('Trop d\'essais de captcha invalides');
                                 return;
                             }
                             collector.stop();
                             return;
                         }
-                        interaction.followUp({
+                        await interaction.followUp({
                             content: `:x: | **Code invalide, veuillez réessayer. Il vous reste ${3 - invalid} essais**`,
                             ephemeral: true
                         });
                     }
                     if (message.content === captcha.text) {
                         try {
-                            interaction.followUp({
-                                content: '✅ | **Vérifié**',
-                                ephemeral: true
-                            });
-                            message.member.roles.remove("906150394940489749");
+                            await interaction.channel.permissionOverwrites.create(interaction.member, { SEND_MESSAGES: false })
                             collector.stop();
-                            const rearow = new Discord.MessageActionRow()
+                            const rearow = new MessageActionRow()
                             .addComponents(
-                                new Discord.MessageSelectMenu()
+                                new MessageSelectMenu()
                                     .setCustomId('selectsetup')
                                     .setPlaceholder('Rien de selectioné')
                                     .setMinValues(0)
@@ -155,14 +155,23 @@ module.exports = {
                                         },
                                     ]),
                             );
-                            const reaembed = new Discord.MessageEmbed()
-                                .setTitle(`A présent, choisissez vos rôles !`)
+                            const rearow2 = new MessageActionRow()
+                                .addComponents(
+                                    new MessageButton()
+                                        .setCustomId("selectsetup_validation")
+                                        .setLabel("Valider")
+                                        .setStyle("SUCCESS")
+                                )
+                            const reaembed = new MessageEmbed()
+                                .setTitle(`(2/2) · A présent, choisissez vos rôles de notification !`)
                                 .setColor("#0099ff")
-                                .setDescription(`Vous pouvez les sélectionner avec le select menu.`)
-                                interaction.followUp({embeds: [reaembed], components: [rearow], ephemeral: true})
+                                .setDescription("Maintenant que je suis sûr que vous n'êtes pas un robot, veuillez " +
+                                "choisir ci-dessous les notifications que vous voulez recevoir (Vous pourrez toujours " +
+                                "les changer plus tard).")
+                            await interaction.followUp({embeds: [reaembed], components: [rearow, rearow2], ephemeral: true})
                         } catch (e) {
                             collector.stop();
-                            interaction.followUp({
+                            await interaction.followUp({
                                 content: ':x: | **Une erreur est survenue**',
                                 ephemeral: true
                             });
@@ -174,18 +183,15 @@ module.exports = {
                     clearInterval(fuckterval);
                     if (reason === 'time' && toggle === true) {
                         if (interaction.member.kickable) {
-                            interaction.followUp({
+                            await interaction.followUp({
                                 content: '**L\'utilisateur à été kick pour ne pas avoir répondu à temps.**',
                                 ephemeral: true
                             });
-                            interaction.member.kick('N\'a pas répondu au captcha à temps');
-                            return;
+                            await interaction.member.kick('N\'a pas répondu au captcha à temps');
                         }
-                        return;
                     }
                 });
-            }
-            if (interaction.customId === "delete_suggestion") {
+            } else if (interaction.customId === "delete_suggestion") {
                 if (interaction.member.id === interaction.message.member.id ||
                     interaction.memberPermissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
                     await interaction.deferUpdate()
@@ -193,49 +199,35 @@ module.exports = {
                 } else {
                     await interaction.reply({ content: "Vous n'êtes pas autorisé(e) à supprimer ce message", ephemeral: true })
                 }
+            } else if (interaction.customId === "selectsetup_validation") {
+                await interaction.member.roles.add("906149050510876674");
+                await interaction.deferUpdate()
             }
-        }else if(interaction.isSelectMenu()) {
+        } else if (interaction.isSelectMenu()) {
             const { customId, values, member } = interaction;
 
-            if (customId === 'select') {
+            if (customId === 'select' || customId === "selectsetup") {
                 const component = interaction.component
                 const removed = component.options.filter((option) => {
                     return !values.includes(option.value)
                 })
 
                 for (const id of removed) {
-                    member.roles.remove(interaction.guild.roles.cache.find(role => role.name === id.value).id);
+                    await member.roles.remove(interaction.guild.roles.cache.find(role => role.name === id.value).id)
                 }
 
                 for (const id of values) {
-                    member.roles.add(interaction.guild.roles.cache.find(role => role.name === id).id);
+                    await member.roles.add(interaction.guild.roles.cache.find(role => role.name === id).id)
                 }
 
-                interaction.reply({
-                    content: "Roles mis à jour !",
-                    ephemeral: true
-                })
-            }else if (customId === 'selectsetup') {
-                const component = interaction.component
-                const removed = component.options.filter((option) => {
-                    return !values.includes(option.value)
-                })
-
-                for (const id of removed) {
-                    member.roles.remove(interaction.guild.roles.cache.find(role => role.name === id.value).id)
+                if (customId === 'select') {
+                    await interaction.reply({
+                        content: "Rôles mis à jour !0",
+                        ephemeral: true
+                    })
+                    return
                 }
-
-                for (const id of values) {
-                    
-                    member.roles.add(interaction.guild.roles.cache.find(role => role.name === id).id)
-                }
-
-                member.roles.add("906149050510876674");
-
-                interaction.reply({
-                    content: "Roles mis à jour, vous avez maintenant accès au serveur !",
-                    ephemeral: true
-                })
+                await interaction.deferUpdate()
             }
         }
     }

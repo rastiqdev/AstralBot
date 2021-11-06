@@ -30,8 +30,7 @@ module.exports = {
 			.setTitle(`Choisissez vos rôles ici !`)
 			.setColor("#0099ff")
 			.setDescription(`Vous pouvez les sélectionner avec le select menu.`)
-			interaction.channel.send({embeds: [embed], components: [row]}).then(async msg => {
-				interaction.reply({content: "Panel envoyé !", ephemeral: true})
-			})
+		await interaction.channel.send({embeds: [embed], components: [row]})
+		interaction.reply({content: "Panel envoyé !", ephemeral: true})
 	},
 };
