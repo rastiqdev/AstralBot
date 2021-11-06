@@ -23,6 +23,14 @@ module.exports = {
             })
         }
 
+        setPresence(1)
+        setTimeout(function(){ 
+            setPresence(2)
+            setTimeout(function(){
+                setPresence(3)
+            }, 10000);
+        }, 10000);
+
         setInterval(async () => {
             setPresence(1)
             setTimeout(function(){ 
