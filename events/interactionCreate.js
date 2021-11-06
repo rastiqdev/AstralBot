@@ -51,8 +51,7 @@ getCaptcha = function() {
 	for (i = 0; i < cords.length; i++) {
 		const cord = cords[i];
 		const nextCord = cords[i + 1];
-		const color = colors[Math.floor(Math.random() * colors.length)];
-		ctx.strokeStyle = color;
+        ctx.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
 		ctx.beginPath();
 		ctx.moveTo(cord[0], cord[1]);
 		if (nextCord) ctx.lineTo(nextCord[0], nextCord[1]);
@@ -108,8 +107,6 @@ module.exports = {
             
                 collector.on('collect', async message => {
                     if (!message.content) return;
-                    let num = 1;
-                    let time = num++;
                     await message.delete();
                     if (message.content !== captcha.text) {
                         invalid++;
@@ -202,71 +199,54 @@ module.exports = {
             } else if (interaction.customId === "selectsetup_validation") {
                 await interaction.member.roles.add("906149050510876674");
                 await interaction.deferUpdate()
-            } else if (interaction.customId === "upvote") {
-                user = interaction.user.id;
-                if (client.voteddb.get(`${user}`, "upvoted") === true) {
-                    return interaction.reply({content: "Vous avez déjà upvoté cette suggestion !", ephemeral: true})
+            } else if (interaction.customId === "upvote" || interaction.customId === "downvote") {
+                const user = interaction.member.id;
+                let author = await client.votesdb.get(interaction.message.id, "author")
+                if (author === interaction.member.id) {
+                    return interaction.reply({
+                        content: "Vous ne pouvez pas voter à votre propre suggestion !",
+                        ephemeral: true
+                    })
                 }
-                if (client.voteddb.get(`${user}`, "downvoted" === true)) {
-                    client.voteddb.delete(`${user}`)
-                    client.votesdb.set(`${interaction.message.id}`, await client.votesdb.get(`${interaction.message.id}`, "votes") + 1, "votes")
+                let votes = await client.votesdb.get(interaction.message.id, "votes")
+                votes = new Map(Object.entries(votes))
+                let voteVal = 0
+                if (interaction.customId === "upvote") voteVal = 1
+                else voteVal = -1
+
+                if (votes.has(user)) {
+                    if (votes.get(user) !== voteVal) {
+                        votes.set(user, voteVal)
+                    } else {
+                        votes.delete(user)
+                    }
+                } else {
+                    votes.set(user, voteVal)
                 }
-                client.voteddb.set(`${user}`, true, "upvoted")
-                client.votesdb.set(`${interaction.message.id}`, await client.votesdb.get(`${interaction.message.id}`, "votes") + 1, "votes")
-                const embed = new MessageEmbed()
-                    .setTitle(`Suggestion de ${await client.votesdb.get(`${interaction.message.id}`, "author")}`)
-                    .setColor("#0099ff")
-                    .setDescription(`${await client.votesdb.get(`${interaction.message.id}`, "suggestion")}`)
+                await client.votesdb.set(interaction.message.id, votes,  "votes")
+                const voteTotal = (Array.from(votes.values())).reduce((a, b) => a + b, 0)
+
+                const embed = interaction.message.embeds[0]
                 const row = new MessageActionRow()
-                .addComponents(
-                    new MessageButton()
-                        .setStyle("DANGER")
-                        .setLabel(`Downvote`)
-                        .setCustomId("downvote"),
-                    new MessageButton()
-                        .setStyle("SECONDARY")
-                        .setLabel(`${await client.votesdb.get(`${interaction.message.id}`, "votes")}`)
-                        .setDisabled(true)
-                        .setCustomId("votenumbers"),
-                    new MessageButton()
-                        .setStyle("SUCCESS")
-                        .setLabel(`Upvote`)
-                        .setCustomId("upvote")
-                )
-                interaction.message.edit({embeds: [embed], components: [row]})
-                interaction.reply({content: "Vous avez upvoté ce message avec succès !", ephemeral: true})
-            }else if (interaction.customId === "downvote") {
-                if (client.voteddb.get(`${user}`, "downvoted") === true) {
-                    return interaction.reply({content: "Vous avez déjà downvoté cette suggestion !", ephemeral: true})
-                }
-                if (client.voteddb.get(`${user}`, "upvoted") === true) {
-                    client.voteddb.delete(`${user}`)
-                    client.votesdb.set(`${interaction.message.id}`, await client.votesdb.get(`${interaction.message.id}`, "votes") - 1, "votes")
-                }
-                client.voteddb.set(`${user}`, true, "downvoted")
-                client.votesdb.set(`${interaction.message.id}`, await client.votesdb.get(`${interaction.message.id}`, "votes") - 1, "votes")
-                const embed = new MessageEmbed()
-                    .setTitle(`Suggestion de ${await client.votesdb.get(`${interaction.message.id}`, "author")}`)
-                    .setColor("#0099ff")
-                    .setDescription(`${await client.votesdb.get(`${interaction.message.id}`, "suggestion")}`)
-                const row = new MessageActionRow()
-                .addComponents(
-                    new MessageButton()
-                        .setStyle("DANGER")
-                        .setLabel(`Downvote`)
-                        .setCustomId("downvote"),
-                    new MessageButton()
-                        .setStyle("SECONDARY")
-                        .setLabel(`${await client.votesdb.get(`${interaction.message.id}`, "votes")}`)
-                        .setDisabled(true)
-                        .setCustomId("votenumbers"),
-                    new MessageButton()
-                        .setStyle("SUCCESS")
-                        .setLabel(`Upvote`)
-                        .setCustomId("upvote")
-                )
-                interaction.message.edit({embeds: [embed], components: [row]})
-                interaction.reply({content: "Vous avez downvoté ce message avec succès !", ephemeral: true})
+                    .addComponents(
+                        new MessageButton()
+                            .setStyle("PRIMARY")
+                            .setLabel(`Upvote`)
+                            .setEmoji(":upvote:906184895611682826")
+                            .setCustomId("upvote"),
+                        new MessageButton()
+                            .setStyle("SECONDARY")
+                            .setLabel(voteTotal.toString())
+                            .setDisabled(true)
+                            .setCustomId("votenumbers"),
+                        new MessageButton()
+                            .setStyle("DANGER")
+                            .setLabel(`Downvote`)
+                            .setEmoji(":downvote:906184926146216006")
+                            .setCustomId("downvote")
+                    )
+                await interaction.message.edit({ embeds: [embed], components: [row] })
+                await interaction.deferUpdate()
             }
         } else if (interaction.isSelectMenu()) {
             const { customId, values, member } = interaction;

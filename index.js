@@ -1,20 +1,21 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-require('dotenv').config();
 const { EconomyManager } = require("quick.eco")
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-const { Collection: MongoCollection, MongoClient } = require("mongodb");
+const { MongoClient } = require("mongodb");
 const quickmongo = require("quickmongo");
 
+require('dotenv').config();
+
+// Discord client
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+
+// Mongo client
 const mongo = new MongoClient(process.env.MONGOURL);
-const votesschema = new quickmongo.Fields.ObjectField({
+
+// Suggestion schema
+const suggestionSchema = new quickmongo.Fields.ObjectField({
     author: new quickmongo.Fields.StringField(),
-    suggestion: new quickmongo.Fields.StringField(),
-    votes: new quickmongo.Fields.NumberField()
-});
-const votedschema = new quickmongo.Fields.ObjectField({
-    upvoted: new quickmongo.Fields.BooleanField(),
-    downvoted: new quickmongo.Fields.BooleanField()
+    votes: new quickmongo.Fields.AnyField()
 });
 
 mongo.connect()
@@ -23,8 +24,7 @@ mongo.connect()
     });
     const mongoCollection = mongo.db().collection("JSON");
 
-    client.votesdb = new quickmongo.Collection(mongoCollection, votesschema);
-    client.voteddb = new quickmongo.Collection(mongoCollection, votesschema);
+    client.votesdb = new quickmongo.Collection(mongoCollection, suggestionSchema);
 
     // db.set("userInfo", { difficulty: "Easy", items: [], balance: 0 }).then(console.log);
     // -> { difficulty: 'Easy', items: [], balance: 0 }
