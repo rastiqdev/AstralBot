@@ -7,7 +7,7 @@ module.exports = {
         setInterval(async () => {
             client.user?.setPresence({
                 afk: false,
-                status: "online",
+                status: "dnd",
                 activities: [
                     {
                         name: "s'abonner à Astral",

@@ -6,7 +6,6 @@ module.exports = {
 		.setName('reactionpanel')
 		.setDescription('Envoie un panel pour les vérifs.'),
 	async execute(client, interaction) {
-		const user = interaction.user;
 		const row = new MessageActionRow()
 		.addComponents(
 			new MessageSelectMenu()
@@ -18,12 +17,12 @@ module.exports = {
 					{
 						label: 'Annonces',
 						description: 'Annonces',
-						value: 'annonces',
+						value: 'Annonces',
 					},
 					{
 						label: 'Vidéos & Lives',
 						description: 'Vidéos & Lives',
-						value: 'videos',
+						value: 'Vidéos',
 					},
 				]),
 		);

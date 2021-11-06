@@ -133,15 +133,40 @@ module.exports = {
                                 content: '✅ | **Vérifié**',
                                 ephemeral: true
                             });
-                            message.member.roles.remove("906150394940489749")
-                            message.member.roles.add("906149050510876674");
+                            message.member.roles.remove("906150394940489749");
                             collector.stop();
-                        } catch {
+                            const rearow = new Discord.MessageActionRow()
+                            .addComponents(
+                                new Discord.MessageSelectMenu()
+                                    .setCustomId('selectsetup')
+                                    .setPlaceholder('Rien de selectioné')
+                                    .setMinValues(0)
+                                    .setMaxValues(2)
+                                    .addOptions([
+                                        {
+                                            label: 'Annonces',
+                                            description: 'Annonces',
+                                            value: 'Annonces',
+                                        },
+                                        {
+                                            label: 'Vidéos & Lives',
+                                            description: 'Vidéos & Lives',
+                                            value: 'Vidéos',
+                                        },
+                                    ]),
+                            );
+                            const reaembed = new Discord.MessageEmbed()
+                                .setTitle(`A présent, choisissez vos rôles !`)
+                                .setColor("#0099ff")
+                                .setDescription(`Vous pouvez les sélectionner avec le select menu.`)
+                                interaction.followUp({embeds: [reaembed], components: [rearow], ephemeral: true})
+                        } catch (e) {
                             collector.stop();
                             interaction.followUp({
                                 content: ':x: | **Une erreur est survenue**',
                                 ephemeral: true
                             });
+                            console.error(e)
                         }
                     }
                 });
@@ -168,6 +193,49 @@ module.exports = {
                 } else {
                     await interaction.reply({ content: "Vous n'êtes pas autorisé(e) à supprimer ce message", ephemeral: true })
                 }
+            }
+        }else if(interaction.isSelectMenu()) {
+            const { customId, values, member } = interaction;
+
+            if (customId === 'select') {
+                const component = interaction.component
+                const removed = component.options.filter((option) => {
+                    return !values.includes(option.value)
+                })
+
+                for (const id of removed) {
+                    member.roles.remove(interaction.guild.roles.cache.find(role => role.name === id.value).id);
+                }
+
+                for (const id of values) {
+                    member.roles.add(interaction.guild.roles.cache.find(role => role.name === id).id);
+                }
+
+                interaction.reply({
+                    content: "Roles mis à jour !",
+                    ephemeral: true
+                })
+            }else if (customId === 'selectsetup') {
+                const component = interaction.component
+                const removed = component.options.filter((option) => {
+                    return !values.includes(option.value)
+                })
+
+                for (const id of removed) {
+                    member.roles.remove(interaction.guild.roles.cache.find(role => role.name === id.value).id)
+                }
+
+                for (const id of values) {
+                    
+                    member.roles.add(interaction.guild.roles.cache.find(role => role.name === id).id)
+                }
+
+                member.roles.add("906149050510876674");
+
+                interaction.reply({
+                    content: "Roles mis à jour, vous avez maintenant accès au serveur !",
+                    ephemeral: true
+                })
             }
         }
     }
