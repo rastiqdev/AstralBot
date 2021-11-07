@@ -4,7 +4,7 @@ const { MessageButton, MessageActionRow, Permissions } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('kick')
-		.setDescription('Expulser un membre.')
+		.setDescription('Expulser un membre (ADMIN).')
 		.addUserOption(option => option.setName('utilisateur').setDescription('Le membre à expulser').setRequired(true))
 		.addStringOption(option => option.setName('raison').setDescription('La raison pour laquelle bannir le membre').setRequired(true)),
 	async execute(client, interaction) {

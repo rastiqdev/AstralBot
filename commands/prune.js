@@ -4,7 +4,7 @@ const { Permissions } = require('discord.js')
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('delete')
-		.setDescription('Supprimer jusqu\'à 99 messages.')
+		.setDescription('Supprimer jusqu\'à 99 messages (ADMIN).')
 		.addIntegerOption(option => option.setName('nombre').setDescription('Nombre de messages à supprimer.').setRequired(true)),
 	async execute(client, interaction) {
 		const author = interaction.member;

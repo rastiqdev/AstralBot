@@ -4,7 +4,7 @@ const { MessageEmbed,MessageActionRow,MessageButton,Permissions } = require('dis
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('verifypanel')
-		.setDescription('Envoie un panel pour les vérifs.'),
+		.setDescription('Envoie un panel pour les vérifs (ADMIN).'),
 	async execute(client, interaction) {
 		const author = interaction.member;
 		if (!author.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {

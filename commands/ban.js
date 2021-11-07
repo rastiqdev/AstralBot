@@ -4,7 +4,7 @@ const { MessageButton, MessageActionRow, Permissions } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('ban')
-		.setDescription('Bannir un membre.')
+		.setDescription('Bannir un membre (ADMIN).')
 		.addUserOption(option => option.setName('utilisateur').setDescription('Le membre à bannir').setRequired(true))
 		.addStringOption(option => option.setName('raison').setDescription('La raison pour laquelle bannir le membre').setRequired(true)),
 	async execute(client, interaction) {
