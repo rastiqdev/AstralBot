@@ -3,11 +3,13 @@ const { Client, Collection, Intents } = require('discord.js');
 const { EconomyManager } = require("quick.eco")
 const { MongoClient } = require("mongodb");
 const quickmongo = require("quickmongo");
+const config = require('./config.json')
 
 require('dotenv').config();
 
 // Discord client
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+client.config = config
 
 // Mongo client
 const mongo = new MongoClient(process.env.MONGOURL);
