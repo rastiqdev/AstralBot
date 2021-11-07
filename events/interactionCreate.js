@@ -169,7 +169,17 @@ module.exports = {
                 await client.votesdb.set(interaction.message.id, votes,  "votes")
                 const voteTotal = (Array.from(votes.values())).reduce((a, b) => a + b, 0)
 
-                const embed = interaction.message.embeds[0]
+                const authorid = await client.votesdb.get(interaction.message.id, "author")
+
+                const suggestionauthor = client.users.cache.find(user => user.id === authorid)
+
+                const embed = new MessageEmbed()
+                .setTitle(`Suggestion de ${suggestionauthor.name}`)
+                .setColor("#0099ff")
+                .setDescription(await client.votesdb.get(interaction.message.id, "suggestion"))
+                .setThumbnail(suggestionauthor.avatarURL({ dynamic: true }))
+                .setTimestamp(Date.now())
+                .setFooter("Créez un thread pour débattre des suggestions !")
                 const row = new MessageActionRow()
                     .addComponents(
                         new MessageButton()

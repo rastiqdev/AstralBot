@@ -15,16 +15,27 @@ const mongo = new MongoClient(process.env.MONGOURL);
 // Suggestion schema
 const suggestionSchema = new quickmongo.Fields.ObjectField({
     author: new quickmongo.Fields.StringField(),
+    suggestion: new quickmongo.Fields.StringField(),
     votes: new quickmongo.Fields.AnyField()
+});
+
+// Counting schema
+const countingSchema = new quickmongo.Fields.ObjectField({
+    author: new quickmongo.Fields.StringField(),
+    currentNumber: new quickmongo.Fields.NumberField()
 });
 
 mongo.connect()
     .then(() => {
         console.log("Connected to the database!");
     });
-    const mongoCollection = mongo.db().collection("JSON");
+    const suggestionsCollection = mongo.db().collection("suggestions");
 
-    client.votesdb = new quickmongo.Collection(mongoCollection, suggestionSchema);
+    client.votesdb = new quickmongo.Collection(suggestionsCollection, suggestionSchema);
+
+    const countingCollection = mongo.db().collection("counting");
+
+    client.countdb = new quickmongo.Collection(countingCollection, countingSchema);
 
     // db.set("userInfo", { difficulty: "Easy", items: [], balance: 0 }).then(console.log);
     // -> { difficulty: 'Easy', items: [], balance: 0 }
