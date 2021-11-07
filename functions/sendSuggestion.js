@@ -30,5 +30,5 @@ module.exports = sendSuggestion = async function(interaction) {
                 .setCustomId("downvote")
         )
     const msg = await (await interaction.client.channels.fetch(interaction.client.config.suggestionChannelId)).send({embeds: [embed], components: [row]})
-    await interaction.client.votesdb.set(`${msg.id}`, {author: interaction.member.id, votes: []})
+    await interaction.client.votesdb.set(`${msg.id}`, {author: interaction.member.id, votes: {}})
 }
