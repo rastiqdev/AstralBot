@@ -4,13 +4,16 @@ const {MessageAttachment, MessageEmbed} = require("discord.js");
 module.exports = {
     name: "guildMemberAdd",
     async execute(client, member) {
+
         const canvas = createCanvas(900, 300)
         const ctx = canvas.getContext("2d")
 
         const img = await Canvas.loadImage(__dirname + "/../../res/welcome_image.png")
         ctx.drawImage(img, 0, 0, 900, 300)
 
-        const avatar = await Canvas.loadImage(member.avatarURL({ size: 300, format: "png" }))
+        let avatar_url = member.avatarURL({ size: 300, format: "png" })
+        if (!avatar_url) avatar_url = member.user.defaultAvatarURL
+        const avatar = await Canvas.loadImage(member.user.avatarURL({ size: 300, format: "png" }))
 
         const x = 600
         const y = 0
@@ -41,6 +44,7 @@ module.exports = {
             .setTitle(`${member.user.tag} a rejoint le serveur !`)
             .setDescription("🎉 Bienvenue à toi ! 🎉")
             .setImage("attachment://welcome_img.png")
-        await (await member.guild.channels.fetch(client.config.welcomeChannelId)).send({ embeds: [embed], files: [attachment]})
+        const channel = await member.guild.channels.fetch(client.config.welcomeChannelId)
+        await channel.send({ embeds: [embed], files: [attachment]})
     }
 }
