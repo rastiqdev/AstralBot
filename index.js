@@ -24,7 +24,7 @@ mongo.connect()
     .then(() => {
         console.log("Connected to the database!");
     });
-    const mongoCollection = mongo.db().collection("JSON");
+    const mongoCollection = mongo.db().collection("suggestions");
 
     client.votesdb = new quickmongo.Collection(mongoCollection, suggestionSchema);
 
