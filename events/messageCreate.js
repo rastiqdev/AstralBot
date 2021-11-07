@@ -7,5 +7,6 @@ module.exports = {
 
         if (message.channelId !== client.config.suggestionChannelId) return
         await sendSuggestion(message)
+        await message.delete()
     }
 }
