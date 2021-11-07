@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "deploy-commands": "node src/deploy-commands.js",
-    "test": "eslint --ext .js ."
+    "test": "eslint --ext .js .",
+    "setup": "node src/setup.js"
   },
   "repository": {
     "type": "git",
