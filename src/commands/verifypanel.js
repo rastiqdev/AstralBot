@@ -10,7 +10,6 @@ module.exports = {
 		if (!author.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
 			return interaction.reply({ content: `Vous n'avez pas le droit d'exécuter cette commande !`, ephemeral: true })
 		}
-		const user = interaction.user;
 		const embed = new MessageEmbed()
 			.setTitle(`Vérification`)
 			.setColor("#0099ff")
