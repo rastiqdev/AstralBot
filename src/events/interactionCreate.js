@@ -1,9 +1,6 @@
 const {Permissions, MessageEmbed, MessageAttachment, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
-const Canvas = require('canvas');
 const getCaptcha = require("../functions/generateCaptcha")
 const handleSuggestionVotes = require("../functions/handleSuggestionVotes")
-Canvas.registerFont('fonts/Roboto.ttf', { family: 'Roboto' });
-Canvas.registerFont('fonts/sans.ttf', { family: 'Sans' });
 
 module.exports = {
     name: "interactionCreate",

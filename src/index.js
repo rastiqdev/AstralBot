@@ -3,7 +3,7 @@ const { Client, Collection, Intents } = require('discord.js');
 const { EconomyManager } = require("quick.eco")
 const { MongoClient } = require("mongodb");
 const quickmongo = require("quickmongo");
-const config = require('./config.json')
+const config = require('../res/config.json')
 
 require('dotenv').config();
 
@@ -67,7 +67,7 @@ client.eco = new EconomyManager({
 
 // COMMANDS
 client.commands = new Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
@@ -75,7 +75,7 @@ for (const file of commandFiles) {
 }
 
 // EVENTS
-const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
+const eventFiles = fs.readdirSync('./src/events').filter(file => file.endsWith('.js'));
 
 for (const file of eventFiles) {
 	const event = require(`./events/${file}`);

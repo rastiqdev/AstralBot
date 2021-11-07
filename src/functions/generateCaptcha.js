@@ -1,6 +1,9 @@
 const Canvas = require("canvas");
 
 module.exports = getCaptcha = function() {
+    Canvas.registerFont(__dirname + "../../../res/fonts/Roboto.ttf", { family: 'Roboto' });
+    Canvas.registerFont(__dirname + '../../../res/fonts/sans.ttf', { family: 'Sans' });
+
     let i;
     const canvas = Canvas.createCanvas(400, 180);
     const ctx = canvas.getContext('2d');
