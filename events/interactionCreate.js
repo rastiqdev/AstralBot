@@ -210,7 +210,7 @@ module.exports = {
 
                 if (customId === 'select') {
                     await interaction.reply({
-                        content: "Rôles mis à jour !0",
+                        content: "Rôles mis à jour !",
                         ephemeral: true
                     })
                     return
