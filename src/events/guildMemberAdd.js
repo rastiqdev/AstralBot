@@ -44,6 +44,8 @@ module.exports = {
             .setTitle(`${member.user.tag} a rejoint le serveur !`)
             .setDescription("🎉 Bienvenue à toi ! 🎉")
             .setImage("attachment://welcome_img.png")
+            .setColor("#0099ff")
+            .setFooter("On est maintenant " + member.guild.memberCount + " membres !")
         const channel = await member.guild.channels.fetch(client.config.welcomeChannelId)
         await channel.send({ embeds: [embed], files: [attachment]})
     }
