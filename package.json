@@ -29,6 +29,7 @@
     "dotenv": "^10.0.0",
     "eslint": "^8.2.0",
     "eslint-config-google": "^0.14.0",
+    "jimp": "^0.3.11",
     "mongodb": "^4.1.4",
     "quick.eco": "^6.0.0",
     "quickmongo": "^4.0.0"
