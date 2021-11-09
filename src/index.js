@@ -20,6 +20,18 @@ const suggestionSchema = new quickmongo.Fields.ObjectField({
     votes: new quickmongo.Fields.AnyField()
 });
 
+// Counting schema
+const countingSchema = new quickmongo.Fields.ObjectField({
+    author: new quickmongo.Fields.StringField(),
+    currentNumber: new quickmongo.Fields.NumberField()
+});
+
+// Warn schema
+
+const warnSchema = new quickmongo.Fields.ObjectField({
+    warns: new quickmongo.Fields.NumberField
+});
+
 mongo.connect()
     .then(() => {
         console.log("Connected to the database!");
@@ -27,6 +39,14 @@ mongo.connect()
     const mongoCollection = mongo.db().collection("suggestions");
 
     client.votesdb = new quickmongo.Collection(mongoCollection, suggestionSchema);
+
+    const countingCollection = mongo.db().collection("counting");
+
+    client.countdb = new quickmongo.Collection(countingCollection, countingSchema);
+
+    const warnCollection = mongo.db().collection("warns");
+
+    client.warnsdb = new quickmongo.Collection(warnCollection, warnSchema);
 
     // db.set("userInfo", { difficulty: "Easy", items: [], balance: 0 }).then(console.log);
     // -> { difficulty: 'Easy', items: [], balance: 0 }
