@@ -4,5 +4,13 @@
   "rolePannelChannelId": "906274132679860244",
   "mainGuildId": "906119156334743582",
   "welcomeChannelId": "906925355061895168",
-  "countingChannelId": "906842382048329778"
+  "countingChannelId": "906842382048329778",
+  "logs": {
+    "messagesChannelId": "909860870216093698",
+    "modChannelId": "909860895918809129",
+    "vocalChannelId": "909860912389845012",
+    "joinsChannelId": "909860923123044412",
+    "ticketsChannelId": "909860958753669201",
+    "botChannelId": "909860969398829116"
+  }
 }
