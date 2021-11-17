@@ -8,7 +8,15 @@ const config = require('../res/config.json')
 require('dotenv').config();
 
 // Discord client
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
+const client = new Client({
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.GUILD_BANS
+    ],
+    partials: ["MESSAGE"]
+});
 client.config = config
 
 // Mongo client
