@@ -1,0 +1,18 @@
+{
+    "system": {
+        "MEMBER_NOT_FOUND": "Impossible de trouver le membre ({{member}}) dans le serveur.",
+        "CHANNEL_TOPIC": "Ce mail à été créé pour aider **{{member}}**",
+        "SUCCESS_EMBED": {
+            "AUTHOR": ["MAIL OUVERT"],
+            "DESCRIPTION": ["La conversation est maintenant ouverte, vous allez bientôt être contacté par le support :D"]
+        },
+        "DETAILS_EMBED": {
+            "AUTHOR": ["DETAILS"],
+            "DESCRIPTION": ["{{content}}"]
+        },
+        "DELETE_EMBED": {
+            "AUTHOR": ["MAIL SUPPRIMÉ"],
+            "DESCRIPTION": ["Votre mail a été supprimé par les modérateurs. Si vous avez un problème avec ça, veuillez envoyer un message ici."]
+        }
+    }
+}
