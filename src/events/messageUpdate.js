@@ -3,7 +3,8 @@ const {MessageEmbed} = require("discord.js");
 module.exports = {
     name: "messageUpdate",
     async execute(client, old, new_) {
-        if (new_.channelId === client.config.verifChannelId) return
+        if (new_.channelId === client.config.verifChannelId ||
+            new_.channelId === client.config.logs.messagesChannelId) return
 
         const embed = new MessageEmbed()
             .setAuthor(`Message modifié par ${new_.author.tag}`)

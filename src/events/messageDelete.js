@@ -4,6 +4,8 @@ module.exports = {
     name: "messageDelete",
     async execute(client, message) {
         if (!message.author && !message.content) return
+        if (message.channelId === client.config.verifChannelId ||
+            message.channelId === client.config.logs.messagesChannelId) return
 
         const embed = new MessageEmbed()
             .setAuthor(`Un message de  ${message.author.tag} a été supprimé`)
