@@ -2,7 +2,6 @@ const {MessageEmbed} = require("discord.js");
 module.exports = {
     name: "guildMemberRemove",
     async execute(client, member) {
-        console.log("test")
         const fetchedLogs = await member.guild.fetchAuditLogs({
             limit: 1,
             type: 'MEMBER_KICK',
