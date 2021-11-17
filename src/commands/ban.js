@@ -38,7 +38,7 @@ module.exports = {
 
 				const embed = new MessageEmbed()
 					.setAuthor("Membre banni")
-					.setColor("#0099ff")
+					.setColor("#ff1500")
 					.setTimestamp(Date.now())
 					.setThumbnail(user.avatarURL({ dynamic: true }))
 					.addField("Utilisateur :", `${user.id}`, true)
