@@ -1,8 +1,15 @@
+const {MessageEmbed} = require("discord.js");
 module.exports = {
     name: "ready",
     once: true,
     async execute(client) {
         console.log('Connecté en tant que ' + client.user.username + "#" + client.user.discriminator + ' !');
+
+        const embed = new MessageEmbed()
+            .setAuthor("Bot en ligne !")
+        const channel = await (
+            await client.guilds.fetch(process.env.GUILDID)).channels.fetch(client.config.logs.botChannelId)
+        await channel.send({ embeds: [embed] })
 
         const activities = [
             "s'abonner à Astral",

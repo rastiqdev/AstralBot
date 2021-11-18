@@ -33,8 +33,8 @@ module.exports = {
 
 		collector.on('collect', async i => {
 			if (i.customId === 'oui') {
-				await user.send('Vous avez été kick de ' + interaction.guild.name + ' pour ' + reason + '.');
-				user.kick({reason: reason})
+				await user.send('Vous avez été kick de ' + interaction.guild.name + ' pour :\n`' + reason + '`');
+				await user.kick({reason: reason})
 				await i.update({ content: 'Vous avez expulsé ' + user.user.username + "#" + user.user.discriminator + ' avec succès !', components: [] });
 			}else{
 				await i.update({ content: 'Opération annulée !', components: [] });

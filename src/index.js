@@ -13,8 +13,9 @@ const client = new Client({     intents: [
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_MEMBERS,
     Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.DIRECT_MESSAGES,
-], partials: ["CHANNEL"]});
+    Intents.FLAGS.GUILD_BANS,
+    Intents.FLAGS.DIRECT_MESSAGES
+], partials: ["CHANNEL", "MESSAGE"]});
 client.config = config
 
 // Mongo client

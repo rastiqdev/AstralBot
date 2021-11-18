@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageButton, MessageActionRow, Permissions } = require('discord.js');
+const { MessageButton, MessageActionRow, Permissions, MessageEmbed} = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -33,8 +33,21 @@ module.exports = {
 
 		collector.on('collect', async i => {
 			if (i.customId === 'oui') {
-				await user.send('Vous avez été banni de ' + interaction.guild.name + ' pour ' + reason + ".");
-				user.ban({reason: reason})
+				await user.send('Vous avez été banni de ' + interaction.guild.name + ' pour :\n`' + reason + "`");
+				await user.ban({reason: reason})
+
+				const embed = new MessageEmbed()
+					.setAuthor("Membre banni")
+					.setColor("#ff1500")
+					.setTimestamp(Date.now())
+					.setThumbnail(user.avatarURL({ dynamic: true }))
+					.addField("Utilisateur :", `${user.id}`, true)
+					.addField("Modérateur :", `<@${author.id}>`, true)
+					.addField("Raison :", reason, true)
+
+				const channel = await interaction.guild.channels.fetch(client.config.logs.modChannelId)
+				await channel.send({ embeds: [embed] })
+
 				await i.update({ content: 'Vous avez banni ' + user.user.username + "#" + user.user.discriminator + ' avec succès !', components: [] });
 			}else{
 				await i.update({ content: 'Opération annulée !', components: [] });
