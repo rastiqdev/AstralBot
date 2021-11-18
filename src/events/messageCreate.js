@@ -24,7 +24,6 @@ module.exports = {
         }
 
         if (!message.guild) {
-            console.log("recieved dm")
             const guild = client.guilds.cache.get(client.config.modMailServerId) || await client.guilds.fetch(client.config.modMailServerId).catch(m => { })
             const member = guild.members.cache.get(message.author.id) || await guild.members.fetch(message.author.id).catch(err => { })
     
@@ -38,8 +37,7 @@ module.exports = {
             if (!channel) {
                 channel = await guild.channels.create(message.author.id, {
                     type: "text",
-                    parent: category.id,
-                    topic: await translate("system.CHANNEL_TOPIC", { member: message.author.tag })
+                    parent: category.id
                 })
     
                 let success_embed = new MessageEmbed()

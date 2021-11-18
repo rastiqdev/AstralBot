@@ -1,9 +1,12 @@
-module.exports = {
-    name: "messageCreate",
-    async execute(client, message) {
+const { MessageEmbed } = require('discord.js')
+const translate = require('../../tools/translate')
 
-const category = channel.guild.channels.cache.find((x) => x.name == "Mod Mail")
-     if (!category) return client.log(translate("system.PARENT_MISSING"))
+module.exports = {
+    name: "channelDelete",
+    async execute(client, channel) {
+
+const category = channel.guild.channels.cache.find((x) => x.name == "ModMail").id;
+if (channel.parentId !== category) return;
  
      const member = channel.guild.members.cache.get(channel.name) || await channel.guild.members.fetch(channel.name).catch(err => { })
      if (!member) return client.log(translate("system.MEMBER_NOT_FOUND", { member: "XXX" }))
