@@ -23,4 +23,3 @@ Installez AstralBot avec la source
 ```bash
   npm run start
 ```
-    
