@@ -127,7 +127,7 @@ client.player.on('connectionError', (queue, error) => {
 });
 
 client.player.on('trackStart', (queue, track) => {
-    queue.metadata.send(`Started playing ${track.title} in **${queue.connection.channel.name}** 🎧`);
+    queue.metadata.send(`Musique ${track.title} jouée dans **${queue.connection.channel.name}** 🎧`);
 });
 
 client.player.on('trackAdd', (queue, track) => {
@@ -143,7 +143,6 @@ client.player.on('channelEmpty', (queue) => {
 });
 
 client.player.on('queueEnd', (queue) => {
-    queue.metadata.send('J\'ai fini de lire la queue ✅');
 });
 
 client.login(process.env.TOKEN);
