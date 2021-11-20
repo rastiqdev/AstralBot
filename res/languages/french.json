@@ -1,6 +1,6 @@
 {
     "system": {
-        "MEMBER_NOT_FOUND": "Impossible de trouver le membre ({{member}}) dans le serveur.",
+        "MEMBER_NOT_FOUND": "Impossible de trouver le membre {{member}} dans le serveur.",
         "CHANNEL_TOPIC": "Ce mail à été créé pour aider **{{member}}**",
         "SUCCESS_EMBED": {
             "AUTHOR": ["MAIL OUVERT"],

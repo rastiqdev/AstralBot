@@ -1,4 +1,4 @@
-const french = require("../languages/french.json")
+const french = require("../../res/languages/french.json")
 
 module.exports = (location, options={}) => {
   let string = eval(`french.${location}`)
