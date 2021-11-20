@@ -2,8 +2,10 @@ const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { EconomyManager } = require("quick.eco")
 const { MongoClient } = require("mongodb");
+const { Player } = require('discord-player');
 const quickmongo = require("quickmongo");
-const config = require('../res/config.json')
+const config = require('../res/config.json');
+const musicconfig = require('./music/config');
 
 require('dotenv').config();
 
@@ -14,9 +16,12 @@ const client = new Client({     intents: [
     Intents.FLAGS.GUILD_MEMBERS,
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_BANS,
-    Intents.FLAGS.DIRECT_MESSAGES
+    Intents.FLAGS.DIRECT_MESSAGES,
+    Intents.FLAGS.GUILD_VOICE_STATES
 ], partials: ["CHANNEL", "MESSAGE"]});
-client.config = config
+client.config = config;
+client.musicconfig = musicconfig
+client.player = new Player(client, client.musicconfig.opt.discordPlayer);
 
 // Mongo client
 const mongo = new MongoClient(process.env.MONGOURL);
@@ -112,5 +117,33 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(client, ...args));
 	}
 }
+
+client.player.on('error', (queue, error) => {
+    console.log(`Error emitted from the queue ${error.message}`);
+});
+
+client.player.on('connectionError', (queue, error) => {
+    console.log(`Error emitted from the connection ${error.message}`);
+});
+
+client.player.on('trackStart', (queue, track) => {
+    queue.metadata.send(`Started playing ${track.title} in **${queue.connection.channel.name}** 🎧`);
+});
+
+client.player.on('trackAdd', (queue, track) => {
+    queue.metadata.send(`Musique ${track.title} ajouté dans la queue ✅`);
+});
+
+client.player.on('botDisconnect', (queue) => {
+    queue.metadata.send('J\'été déconnecté manuellement du salon, je clear la queue... ❌');
+});
+
+client.player.on('channelEmpty', (queue) => {
+    queue.metadata.send('Personne n\'est dans le salon vocal, je le quitte... ❌');
+});
+
+client.player.on('queueEnd', (queue) => {
+    queue.metadata.send('J\'ai fini de lire la queue ✅');
+});
 
 client.login(process.env.TOKEN);
