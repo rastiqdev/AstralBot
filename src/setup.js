@@ -5,7 +5,8 @@ require("dotenv").config()
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 
-client.guilds.fetch(config.mainGuildId).then(async guild => {
+client.once("ready", async () => {
+    const guild = await client.guilds.fetch(config.mainGuildId)
     // ROLES
     let row = new MessageActionRow()
         .addComponents(
@@ -46,6 +47,22 @@ client.guilds.fetch(config.mainGuildId).then(async guild => {
                 .setCustomId("commencer")
         )
     await (await guild.channels.fetch(config.verifChannelId)).send({embeds: [embed], components: [row]})
+
+    // TICKETS
+    embed = new MessageEmbed()
+        .setTitle(`Tickets`)
+        .setColor("#0099ff")
+        .setDescription("Vous avez un problème ? Vous avez besoin de contacter le staff pour je ne sais quoi en privé "+
+            "?\nAlors créez un ticket !\n\nPour cela, rien de plus simple, vous devez simplement cliquer sur le bouton " +
+            "ci-dessous.")
+    row = new MessageActionRow()
+        .addComponents(
+            new MessageButton()
+                .setStyle("SUCCESS")
+                .setLabel("Créer un ticket")
+                .setCustomId("create-ticket")
+        )
+    await (await guild.channels.fetch(config.ticketChannelId)).send({embeds: [embed], components: [row]})
 
     console.log("Pannels envoyés avec succès.")
     client.destroy()
