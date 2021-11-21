@@ -1,6 +1,8 @@
 const {Permissions, MessageEmbed, MessageAttachment, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const getCaptcha = require("../functions/generateCaptcha")
 const handleSuggestionVotes = require("../functions/handleSuggestionVotes")
+const createTicket = require("../functions/createTicket")
+const getChannelTranscript = require("../functions/getChannelTranscript")
 
 module.exports = {
     name: "interactionCreate",
@@ -142,6 +144,50 @@ module.exports = {
                 await interaction.deferUpdate()
             } else if (interaction.customId === "upvote" || interaction.customId === "downvote") {
                 await handleSuggestionVotes(interaction)
+            } else if (interaction.customId === "create-ticket") {
+                await createTicket(interaction)
+            } else if (interaction.customId === "close-ticket") {
+                await interaction.reply({
+                    content: "Voulez-vous vraiment supprimer le ticket ? Cette action est irréversible",
+                    components: [
+                        new MessageActionRow()
+                            .addComponents([
+                                new MessageButton({
+                                    label: "Supprimer le ticket",
+                                    style: "SUCCESS",
+                                    custom_id: "close-ticket-validation"
+                                }),
+                                new MessageButton({
+                                    label: "Annuler",
+                                    style: "DANGER",
+                                    custom_id: "close-ticket-cancel"
+                                })
+                            ])
+                    ],
+                    ephemeral: true
+                })
+                const filter = i => i.user.id === interaction.user.id;
+                const collector = interaction.channel.createMessageComponentCollector({ filter: filter, time: 15000 });
+
+                collector.on("collect", async i => {
+                    if (i.customId === "close-ticket-validation") {
+                        const channelName = i.channel.name
+                        const transcript = await getChannelTranscript(interaction.channel)
+                        const attachment = new MessageAttachment(transcript, "transcription.txt")
+                        if (interaction.channel && interaction.channel.deletable) await interaction.channel.delete()
+                        await i.user.send({
+                            embeds: [{
+                                author: { name: "Ticket supprimé" },
+                                description: `Vous avez supprimé le ticket \`${channelName}\`, voici la transcription ` +
+                                    "des messages de celui-ci",
+                                color: "#0099ff"
+                            }]
+                        })
+                        await i.user.send({ files: [attachment] })
+                    } else if (i.customId === "close-ticket-cancel") {
+                        await i.update({ content: "Opération annulée", components: [], ephemeral: true })
+                    }
+                })
             }
         } else if (interaction.isSelectMenu()) {
             const { customId, values, member } = interaction;

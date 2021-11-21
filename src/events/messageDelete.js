@@ -3,7 +3,7 @@ const {MessageEmbed} = require("discord.js");
 module.exports = {
     name: "messageDelete",
     async execute(client, message) {
-        if (!message.author && !message.content) return
+        if ((!message.author && !message.content) || message.author.bot) return
         if (message.channelId === client.config.verifChannelId ||
             message.channelId === client.config.logs.messagesChannelId) return
 
