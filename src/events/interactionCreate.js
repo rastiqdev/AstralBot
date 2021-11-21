@@ -148,6 +148,15 @@ module.exports = {
                 await interaction.deferUpdate()
             } else if (interaction.customId === "upvote" || interaction.customId === "downvote") {
                 await handleSuggestionVotes(interaction)
+            }else if (interaction.customId === "saveTrack") {
+                const queue = client.player.getQueue(interaction.guildId);
+                if (!queue || !queue.playing) return interaction.reply({ content: `Aucune musique est jouée. ❌`, ephemeral: true, components: [] });
+    
+                interaction.member.send(`Vous avez sauvegardé la musique ${queue.current.title} | ${queue.current.author} dans le serveur ${interaction.member.guild.name} ✅`).then(() => {
+                    return interaction.reply({ content: `Je vous ai envoyé le nom de la musique en DM ✅`, ephemeral: true, components: [] });
+                }).catch(error => {
+                    return interaction.reply({ content: `Je n'ai pas réussi à vous envoyer un DM ❌`, ephemeral: true, components: [] });
+                });
             }
         } else if (interaction.isSelectMenu()) {
             const { customId, values, member } = interaction;
@@ -175,15 +184,6 @@ module.exports = {
                 }
                 await interaction.deferUpdate()
             }
-        }else if (interaction.customId === "saveTrack") {
-            const queue = client.player.getQueue(interaction.guildId);
-            if (!queue || !queue.playing) return interaction.reply({ content: `Aucune musique est jouée. ❌`, ephemeral: true, components: [] });
-
-            interaction.member.send(`Vous avez sauvegardé la musique ${queue.current.title} | ${queue.current.author} dans le serveur ${interaction.member.guild.name} ✅`).then(() => {
-                return interaction.reply({ content: `Je vous ai envoyé le nom de la musique en DM ✅`, ephemeral: true, components: [] });
-            }).catch(error => {
-                return interaction.reply({ content: `Je n'ai pas réussi à vous envoyer un DM ❌`, ephemeral: true, components: [] });
-            });
         }
     }
 }
