@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { QueryType } = require('discord-player');
+const ms = require('ms');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -22,7 +23,9 @@ module.exports = {
 		.setDescription('Activer/Désactiver le mode nightcore sur la musique actuelle.')
         .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode nightcore ou pas').setRequired(true))).addSubcommand(subcommand => subcommand.setName('queue')
 		.setDescription('Voir les musique après la musique actuelle.'))).addSubcommand(subcommand => subcommand.setName('nowplaying')
-		.setDescription('Avoir les informations de la musique actuelle.')).addSubcommand(subcommand => subcommand.setName('clear')
+		.setDescription('Avoir les informations de la musique actuelle.')).addSubcommand(subcommand => subcommand.setName('seek')
+		.setDescription('Avancer/Reculer à une partie de la musique actuelle. (example : 3m 23s)')
+        .addStringOption(option => option.setName('moment').setDescription('Le moment à avancer/reculer dans la musique').setRequired(true))).addSubcommand(subcommand => subcommand.setName('clear')
 		.setDescription('Clear la liste des musiques.')),
 	async execute(client, interaction) {
         if (interaction.options.getSubcommand() === "play") {
@@ -233,6 +236,18 @@ module.exports = {
             queue.clear();
     
             interaction.reply({content: "La queue a été clear ! ✅", ephemeral: true});
+        }else if (interaction.options.getSubcommand() === "seek") {
+            const queue = client.player.getQueue(interaction.guild.id);
+
+            if (!queue || !queue.playing) return interaction.reply({content: "Aucune musique n'est jouée. ❌", ephemeral: true});
+
+            const timeToMS = ms(interaction.options.getString('moment'));
+
+            if (timeToMS >= queue.current.durationMS) return interaction.reply({content: "Temps invalide ou plus grand que la musique ! Veuillez essayer un temps comme 5s, 10s ou 1m. ❌", ephemeral: true});;
+    
+            await queue.seek(timeToMS);
+    
+            await interaction.reply(`Le moment de la musique a été mis à **${ms(timeToMS, { long: true })}** ✅`);
         }
 	},
 };
