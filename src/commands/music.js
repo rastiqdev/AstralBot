@@ -21,12 +21,14 @@ module.exports = {
 		.setDescription('Activer/Désactiver le bassboost sur la musique actuelle.')
         .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode bassboost ou pas').setRequired(true))).addSubcommand(subcommand => subcommand.setName('nightcore')
 		.setDescription('Activer/Désactiver le mode nightcore sur la musique actuelle.')
-        .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode nightcore ou pas').setRequired(true))).addSubcommand(subcommand => subcommand.setName('queue')
-		.setDescription('Voir les musique après la musique actuelle.'))).addSubcommand(subcommand => subcommand.setName('nowplaying')
+        .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode nightcore ou pas').setRequired(true))).addSubcommand(subcommand => subcommand.setName('earrape')
+		.setDescription('Activer/Désactiver le mode earrape sur la musique actuelle.')
+        .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode earrape ou pas').setRequired(true)))).addSubcommand(subcommand => subcommand.setName('nowplaying')
 		.setDescription('Avoir les informations de la musique actuelle.')).addSubcommand(subcommand => subcommand.setName('seek')
 		.setDescription('Avancer/Reculer à une partie de la musique actuelle. (example : 3m 23s)')
         .addStringOption(option => option.setName('moment').setDescription('Le moment à avancer/reculer dans la musique').setRequired(true))).addSubcommand(subcommand => subcommand.setName('clear')
-		.setDescription('Clear la liste des musiques.')),
+		.setDescription('Clear la liste des musiques.')).addSubcommand(subcommand => subcommand.setName('queue')
+		.setDescription('Voir les musique après la musique actuelle.')),
 	async execute(client, interaction) {
         if (interaction.options.getSubcommand() === "play") {
             const res = await client.player.search(interaction.options.getString('musique'), {
@@ -173,6 +175,13 @@ module.exports = {
                 nightcore: interaction.options.getBoolean('toggle')
             });
             return interaction.reply({ content: `🎵 | Nightcore ${interaction.options.getBoolean('toggle') ? 'activé' : 'désactivé'}! Veuillez patienter le temps que je modifie la musique...` });
+        }else if (interaction.options.getSubcommand() === "earrape") {
+            const queue = client.player.getQueue(interaction.guild.id);
+            if (!queue || !queue.playing) return interaction.reply({content: "Aucune musique n'est jouée. ❌", ephemeral: true});
+            await queue.setFilters({
+                earrape: interaction.options.getBoolean('toggle')
+            });
+            return interaction.reply({ content: `🎵 | Earrape ${interaction.options.getBoolean('toggle') ? 'activé' : 'désactivé'} (attention les oreilles)! Veuillez patienter le temps que je modifie la musique...` });
         }else if (interaction.options.getSubcommand() === "queue") {
             const queue = client.player.getQueue(interaction.guild.id);
 
