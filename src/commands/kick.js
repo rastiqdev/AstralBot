@@ -21,7 +21,7 @@ module.exports = {
 					.setLabel('Non')
 					.setStyle('DANGER'),
 			);
-		if (!author.roles.cache.some(client.config.roles.modRoleId) && !author.roles.cache.some(client.config.roles.adminRoleId)) {
+		if (!author.roles.cache.some(role => role.id === client.config.roles.modRoleId) && !author.roles.cache.some(role => role.id === client.config.roles.adminRoleId)) {
 			return interaction.reply({ content: `Vous n'avez pas le droit d'exécuter cette commande !`, ephemeral: true })
 		}
 		interaction.reply({ content: 'Voulez-vous expulser ' + user.user.username + "#" + user.user.discriminator + ' ?', components: [row], ephemeral: true })

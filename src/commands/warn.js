@@ -11,7 +11,7 @@ module.exports = {
 	async execute(client, interaction) {
     
 		const author = interaction.member;
-		if (!author.roles.cache.some(client.config.roles.modRoleId) && !author.roles.cache.some(client.config.roles.adminRoleId)) {
+		if (!author.roles.cache.some(role => role.id === client.config.roles.modRoleId) && !author.roles.cache.some(role => role.id === client.config.roles.adminRoleId)) {
 			return interaction.reply({ content: `Vous n'avez pas le droit d'exécuter cette commande !`, ephemeral: true })
 		}
     
