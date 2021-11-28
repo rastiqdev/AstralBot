@@ -8,7 +8,7 @@ module.exports = {
 		.addIntegerOption(option => option.setName('nombre').setDescription('Nombre de messages à supprimer.').setRequired(true)),
 	async execute(client, interaction) {
 		const author = interaction.member;
-		if (!author.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) {
+		if (!author.roles.cache.some(client.config.roles.modRoleId) && !author.roles.cache.some(client.config.roles.adminRoleId)) {
 			return interaction.reply({ content: `Vous n'avez pas le droit d'exécuter cette commande !`, ephemeral: true })
 		}
 

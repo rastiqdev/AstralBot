@@ -10,7 +10,7 @@ module.exports = {
     
     
 		const author = interaction.member;
-		if (!author.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+		if (!author.roles.cache.some(client.config.roles.modRoleId) && !author.roles.cache.some(client.config.roles.adminRoleId)) {
 			return interaction.reply({ content: `Vous n'avez pas le droit d'exécuter cette commande !`, ephemeral: true })
 		}
     
