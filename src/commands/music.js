@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { QueryType } = require('discord-player');
 const ms = require('ms');
+const { Lyrics } = require("@discord-player/extractor");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,13 +24,19 @@ module.exports = {
 		.setDescription('Activer/Désactiver le mode nightcore sur la musique actuelle.')
         .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode nightcore ou pas').setRequired(true))).addSubcommand(subcommand => subcommand.setName('earrape')
 		.setDescription('Activer/Désactiver le mode earrape sur la musique actuelle.')
-        .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode earrape ou pas').setRequired(true)))).addSubcommand(subcommand => subcommand.setName('nowplaying')
+        .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode earrape ou pas').setRequired(true))).addSubcommand(subcommand => subcommand.setName('8d')
+		.setDescription('Activer/Désactiver le mode 8D sur la musique actuelle.')
+        .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode 8D ou pas').setRequired(true))).addSubcommand(subcommand => subcommand.setName('karaoke')
+		.setDescription('Activer/Désactiver le mode karaoke sur la musique actuelle.')
+        .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode karaoke ou pas').setRequired(true)))).addSubcommand(subcommand => subcommand.setName('nowplaying')
 		.setDescription('Avoir les informations de la musique actuelle.')).addSubcommand(subcommand => subcommand.setName('seek')
 		.setDescription('Avancer/Reculer à une partie de la musique actuelle. (example : 3m 23s)')
         .addStringOption(option => option.setName('moment').setDescription('Le moment à avancer/reculer dans la musique').setRequired(true))).addSubcommand(subcommand => subcommand.setName('clear')
 		.setDescription('Clear la liste des musiques.')).addSubcommand(subcommand => subcommand.setName('queue')
-		.setDescription('Voir les musique après la musique actuelle.')),
+		.setDescription('Voir les musiques après la musique actuelle.')).addSubcommand(subcommand => subcommand.setName('lyrics')
+		.setDescription('Voir les paroles de la musique actuelle.')),
 	async execute(client, interaction) {
+        const lyricsClient = Lyrics.init(client.config.geniusApiKey);
         if (interaction.options.getSubcommand() === "play") {
             const res = await client.player.search(interaction.options.getString('musique'), {
                 requestedBy: interaction.member,
@@ -174,7 +181,7 @@ module.exports = {
             await queue.setFilters({
                 nightcore: interaction.options.getBoolean('toggle')
             });
-            return interaction.reply({ content: `🎵 | Nightcore ${interaction.options.getBoolean('toggle') ? 'activé' : 'désactivé'}! Veuillez patienter le temps que je modifie la musique...` });
+            return interaction.reply({ content: `🎵 | Nightcore ${interaction.options.getBoolean('toggle') ? 'activée' : 'désactivée'}! Veuillez patienter le temps que je modifie la musique...` });
         }else if (interaction.options.getSubcommand() === "earrape") {
             const queue = client.player.getQueue(interaction.guild.id);
             if (!queue || !queue.playing) return interaction.reply({content: "Aucune musique n'est jouée. ❌", ephemeral: true});
@@ -182,6 +189,20 @@ module.exports = {
                 earrape: interaction.options.getBoolean('toggle')
             });
             return interaction.reply({ content: `🎵 | Earrape ${interaction.options.getBoolean('toggle') ? 'activé' : 'désactivé'} (attention les oreilles)! Veuillez patienter le temps que je modifie la musique...` });
+        }else if (interaction.options.getSubcommand() === "8d") {
+            const queue = client.player.getQueue(interaction.guild.id);
+            if (!queue || !queue.playing) return interaction.reply({content: "Aucune musique n'est jouée. ❌", ephemeral: true});
+            await queue.setFilters({
+                "8D": interaction.options.getBoolean('toggle')
+            });
+            return interaction.reply({ content: `🎵 | 8D ${interaction.options.getBoolean('toggle') ? 'activé' : 'désactivé'}! Veuillez patienter le temps que je modifie la musique...` });
+        }else if (interaction.options.getSubcommand() === "karaoke") {
+            const queue = client.player.getQueue(interaction.guild.id);
+            if (!queue || !queue.playing) return interaction.reply({content: "Aucune musique n'est jouée. ❌", ephemeral: true});
+            await queue.setFilters({
+                karaoke: interaction.options.getBoolean('toggle')
+            });
+            return interaction.reply({ content: `🎵 | Karaoke ${interaction.options.getBoolean('toggle') ? 'activé' : 'désactivé'}! Veuillez patienter le temps que je modifie la musique...` });
         }else if (interaction.options.getSubcommand() === "queue") {
             const queue = client.player.getQueue(interaction.guild.id);
 
@@ -257,6 +278,29 @@ module.exports = {
             await queue.seek(timeToMS);
     
             await interaction.reply(`Le moment de la musique a été mis à **${ms(timeToMS, { long: true })}** ✅`);
+        }else if (interaction.options.getSubcommand() === "lyrics") {
+            const queue = client.player.getQueue(interaction.guild.id);
+
+            if (!queue) return interaction.reply({content: "Aucune musique n'est jouée. ❌", ephemeral: true});
+
+            if (queue.current.url.includes("youtube") || queue.current.url.includes("youtu.be") || queue.current.url.includes("soundcloud.com")) {
+                return interaction.reply({content: "Désolé, seules les musiques Spotify sont supportées pour le moment. ❌", ephemeral: true});
+            }
+
+            const track = queue.current;
+    
+            lyricsClient.search(track.author + " " + track.title)
+            .then(lyrics => {
+                const embed = new MessageEmbed()
+                embed.setColor('RED');
+                embed.setThumbnail(track.thumbnail);
+                embed.setAuthor(track.title, client.user.displayAvatarURL({ size: 1024, dynamic: true }));
+                embed.setTitle("Paroles :")
+                embed.setTimestamp();
+                embed.setFooter('AstralMusic', interaction.user.avatarURL({ dynamic: true }));
+                embed.setDescription(lyrics.lyrics)
+                return interaction.reply({embeds: [embed]})})
+            .catch(console.error);
         }
 	},
 };
