@@ -4,19 +4,56 @@ const { EconomyManager } = require("quick.eco")
 const { MongoClient } = require("mongodb");
 const quickmongo = require("quickmongo");
 const config = require('../res/config.json')
+const winston = require("winston")
 
 require('dotenv').config();
 
 // Discord client
-const client = new Client({     intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_BANS,
-    Intents.FLAGS.DIRECT_MESSAGES
-], partials: ["CHANNEL", "MESSAGE"]});
+const client = new Client({
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_BANS,
+        Intents.FLAGS.DIRECT_MESSAGES
+    ],
+    partials: ["CHANNEL", "MESSAGE"]
+});
 client.config = config
+
+let debug = false
+if (process.env.debug === "true") debug = true
+
+client.logger = winston.createLogger({
+    transports: [
+        new winston.transports.Console({
+            format: winston.format.combine(
+                winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+                winston.format.padLevels(),
+                winston.format.printf(
+                    info => winston.format.colorize()
+                        .colorize(info.level,`[${info.timestamp}] [${info.level}] ${info.message}`)
+                )
+            )
+        }),
+    ],
+    level: debug ? "debug" : "info"
+})
+
+console.log(`AstralBot, version ${client.config.version}\n`)
+
+if (!process.env.TOKEN) {
+    client.logger.error("La variable d'environnement 'TOKEN' n'existe pas.")
+    process.exit(1)
+}
+
+if (client.logger.isDebugEnabled()) client.logger.debug("Le mode de débuggage est activé")
+
+if (!process.env.MONGOURL) {
+    client.logger.error("La variable d'environnement 'MONGOURL' n'existe pas.")
+    process.exit(1)
+}
 
 // Mongo client
 const mongo = new MongoClient(process.env.MONGOURL);
@@ -41,7 +78,7 @@ const warnSchema = new quickmongo.Fields.ObjectField({
 
 mongo.connect()
     .then(() => {
-        console.log("Connected to the database!");
+        client.logger.info("Connecté à la base de données")
     });
     const mongoCollection = mongo.db().collection("suggestions");
 
@@ -99,6 +136,7 @@ const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWi
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.data.name, command);
+    client.logger.debug(`Commande '${command.data.name}' ajoutée`)
 }
 
 // EVENTS
@@ -107,10 +145,17 @@ const eventFiles = fs.readdirSync('./src/events').filter(file => file.endsWith('
 for (const file of eventFiles) {
 	const event = require(`./events/${file}`);
 	if (event.once) {
-		client.once(event.name, (...args) => event.execute(client, ...args));
+		client.once(event.name, (...args) => {
+            client.logger.debug(`Évent '${event.name}' reçu`)
+            event.execute(client, ...args)
+        });
 	} else {
-		client.on(event.name, (...args) => event.execute(client, ...args));
+		client.on(event.name, (...args) => {
+            client.logger.debug(`Évent '${event.name}' reçu`)
+            event.execute(client, ...args)
+        });
 	}
+    client.logger.debug(`Évent '${event.name}' ajouté`)
 }
 
 client.login(process.env.TOKEN);
