@@ -73,7 +73,7 @@ const countingSchema = new quickmongo.Fields.ObjectField({
 // Warn schema
 
 const warnSchema = new quickmongo.Fields.ObjectField({
-    warns: new quickmongo.Fields.NumberField
+    warns: new quickmongo.Fields.AnyField()
 });
 
 mongo.connect()
