@@ -32,6 +32,7 @@
     "jimp": "^0.3.11",
     "mongodb": "^4.1.4",
     "quick.eco": "^6.0.0",
-    "quickmongo": "^4.0.0"
+    "quickmongo": "^4.0.0",
+    "winston": "^3.3.3"
   }
 }

@@ -3,17 +3,17 @@ module.exports = {
     name: "ready",
     once: true,
     async execute(client) {
-        console.log('Connecté en tant que ' + client.user.username + "#" + client.user.discriminator + ' !');
+        client.logger.info(`Connecté à discord en tant que ${client.user.tag} (Id : ${client.user.id})`);
 
         const embed = new MessageEmbed()
             .setAuthor("Bot en ligne !")
         const channel = await (
-            await client.guilds.fetch(process.env.GUILDID)).channels.fetch(client.config.logs.botChannelId)
+            await client.guilds.fetch(client.config.mainGuildId)).channels.fetch(client.config.logs.botChannelId)
         await channel.send({ embeds: [embed] })
 
         const activities = [
             "s'abonner à Astral",
-            `${(await client.guilds.fetch(process.env.GUILDID)).memberCount} membres ! 🎉`,
+            `${(await client.guilds.fetch(client.config.mainGuildId)).memberCount} membres ! 🎉`,
             `RASTIQ & Léo-21`
         ]
 
