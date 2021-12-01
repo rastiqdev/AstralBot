@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageButton, MessageActionRow, Permissions } = require('discord.js');
+const { MessageButton, MessageActionRow } = require('discord.js');
+const {isMod, isAdmin} = require("../functions/isModOrAdmin");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,7 +22,7 @@ module.exports = {
 					.setLabel('Non')
 					.setStyle('DANGER'),
 			);
-		if (!author.roles.cache.some(role => role.id === client.config.roles.modRoleId) && !author.roles.cache.some(role => role.id === client.config.roles.adminRoleId)) {
+		if (!isMod(client, interaction.member) && !isAdmin(client, interaction.member) && !interaction.member.permissions.has("KICK_MEMBERS")) {
 			return interaction.reply({ content: `Vous n'avez pas le droit d'exécuter cette commande !`, ephemeral: true })
 		}
 		interaction.reply({ content: 'Voulez-vous expulser ' + user.user.username + "#" + user.user.discriminator + ' ?', components: [row], ephemeral: true })

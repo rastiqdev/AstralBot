@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { Permissions } = require('discord.js')
+const {isMod, isAdmin} = require("../functions/isModOrAdmin");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -7,8 +7,7 @@ module.exports = {
 		.setDescription('Supprimer jusqu\'à 99 messages (ADMIN).')
 		.addIntegerOption(option => option.setName('nombre').setDescription('Nombre de messages à supprimer.').setRequired(true)),
 	async execute(client, interaction) {
-		const author = interaction.member;
-		if (!author.roles.cache.some(role => role.id === client.config.roles.modRoleId) && !author.roles.cache.some(role => role.id === client.config.roles.adminRoleId)) {
+		if (!isMod(client, interaction.member) && !isAdmin(client, interaction.member) && !interaction.member.permissions.has("MANAGE_MESSAGES")) {
 			return interaction.reply({ content: `Vous n'avez pas le droit d'exécuter cette commande !`, ephemeral: true })
 		}
 
