@@ -8,6 +8,9 @@
   "countingChannelId": "906842382048329778",
   "modMailServerId": "906119156334743582",
   "ticketCategoryId": "911956726192963635",
+  "subCounterChannelId": "916452122017558588",
+  "viewsCounterChannelId": "916452429057388544",
+  "astralYoutubeChannelId": "UCCJmvsUsf0Pnst0IzbARSBg",
   "logs": {
     "messagesChannelId": "909860870216093698",
     "modChannelId": "909860895918809129",
@@ -18,13 +21,15 @@
   },
   "mods": {
     "roles": [
-      "914460676167200778",
-      "906124337415864360"
+      "914460676167200778"
     ],
     "user": []
   },
   "admins": {
-    "roles": [],
+    "roles": [
+      "906124337415864360"
+    ],
     "user": []
   }
+  "geniusApiKey": "RsPVeuHKQoBZL8mwINo5Rh0FX1ixwmTM4KjeF4PlWeEzmKDUHvGEOPv6vjjpiSK8"
 }
