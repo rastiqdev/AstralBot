@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
-const { QueryType } = require('discord-player');
+const { QueryType, QueueRepeatMode } = require('discord-player');
 const ms = require('ms');
 const { Lyrics } = require("@discord-player/extractor");
 
@@ -34,7 +34,9 @@ module.exports = {
         .addStringOption(option => option.setName('moment').setDescription('Le moment à avancer/reculer dans la musique').setRequired(true))).addSubcommand(subcommand => subcommand.setName('clear')
 		.setDescription('Clear la liste des musiques.')).addSubcommand(subcommand => subcommand.setName('queue')
 		.setDescription('Voir les musiques après la musique actuelle.')).addSubcommand(subcommand => subcommand.setName('lyrics')
-		.setDescription('Voir les paroles de la musique actuelle.')),
+		.setDescription('Voir les paroles de la musique actuelle.')).addSubcommand(subcommand => subcommand.setName('loop')
+		.setDescription('Activer/Désactiver le mode loop sur la musique actuelle.')
+        .addBooleanOption(option => option.setName('toggle').setDescription('Toggle le mode loop ou pas').setRequired(true))),
 	async execute(client, interaction) {
         const lyricsClient = Lyrics.init(client.config.geniusApiKey);
         if (interaction.options.getSubcommand() === "play") {
@@ -301,6 +303,12 @@ module.exports = {
                 embed.setDescription(lyrics.lyrics)
                 return interaction.reply({embeds: [embed]})})
             .catch(console.error);
+        }else if (interaction.options.getSubcommand() === "loop") {
+            const queue = client.player.getQueue(interaction.guild.id);
+            if (!queue || !queue.playing) return interaction.reply({content: "Aucune musique n'est jouée. ❌", ephemeral: true});
+            const success = await queue.setRepeatMode(interaction.options.getBoolean('toggle') ? QueueRepeatMode.TRACK : QueueRepeatMode.OFF);
+
+            return interaction.reply(success ? `Mode loop **${queue.repeatMode === 0 ? 'désactivé** !' : 'activé** ! Cette musique va se jouer jusqu\'à la désactivation du mode loop.'} 🔂` : {content: `Quelque chose ne s'est pas passé comme prévu... ❌`, ephemeral: true});
         }
 	},
 };
