@@ -190,6 +190,34 @@ module.exports = {
                             }]
                         })
                         await i.user.send({ files: [attachment] })
+
+                        const logsChannel = await (
+                            await client.guilds.fetch(client.config.mainGuildId)).channels.fetch(client.config.logs.ticketsChannelId)
+                        await logsChannel.send({
+                            embeds: [
+                                new MessageEmbed({
+                                    author: {
+                                        name: "Ticket supprimé"
+                                    },
+                                    description: "La transcription des messages du ticket est disponible si-dessous.",
+                                    fields: [
+                                        {
+                                            name: "Utilisateur :",
+                                            value: `${i.user.tag} (${i.user.id})`,
+                                            inline: true
+                                        },
+                                        {
+                                            name: "Ticket :",
+                                            value: channelName,
+                                            inline: true
+                                        }
+                                    ],
+                                    timestamp: Date.now(),
+                                    color: "#ff1500"
+                                })
+                            ]
+                        })
+                        await logsChannel.send({ files: [attachment] })
                     } else if (i.customId === "close-ticket-cancel") {
                         await i.update({ content: "Opération annulée", components: [], ephemeral: true })
                     }
@@ -200,7 +228,7 @@ module.exports = {
     
                 interaction.member.send(`Vous avez sauvegardé la musique ${queue.current.title} | ${queue.current.author} dans le serveur ${interaction.member.guild.name} ✅`).then(() => {
                     return interaction.reply({ content: `Je vous ai envoyé le nom de la musique en DM ✅`, ephemeral: true, components: [] });
-                }).catch(error => {
+                }).catch(() => {
                     return interaction.reply({ content: `Je n'ai pas réussi à vous envoyer un DM ❌`, ephemeral: true, components: [] });
                 });
             }
