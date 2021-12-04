@@ -19,9 +19,17 @@
     "ticketsChannelId": "909860958753669201",
     "botChannelId": "909860969398829116"
   },
-  "roles": {
-    "modRoleId": "914460676167200778",
-    "adminRoleId": "906124337415864360"
+  "mods": {
+    "roles": [
+      "914460676167200778"
+    ],
+    "user": []
   },
+  "admins": {
+    "roles": [
+      "906124337415864360"
+    ],
+    "user": []
+  }
   "geniusApiKey": "RsPVeuHKQoBZL8mwINo5Rh0FX1ixwmTM4KjeF4PlWeEzmKDUHvGEOPv6vjjpiSK8"
 }
