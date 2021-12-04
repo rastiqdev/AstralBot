@@ -59,6 +59,11 @@ if (!process.env.MONGOURL) {
     process.exit(1)
 }
 
+if (!process.env.YOUTUBE_API_KEY) {
+    client.logger.error("La variable d'environnement 'YOUTUBE_API_KEY' n'existe pas.")
+    process.exit(1)
+}
+
 // Mongo client
 const mongo = new MongoClient(process.env.MONGOURL);
 
