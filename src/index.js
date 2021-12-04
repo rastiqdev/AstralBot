@@ -18,7 +18,8 @@ const client = new Client({
         Intents.FLAGS.GUILD_MEMBERS,
         Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_BANS,
-        Intents.FLAGS.DIRECT_MESSAGES
+        Intents.FLAGS.DIRECT_MESSAGES,
+        Intents.FLAGS.GUILD_VOICE_STATES
     ],
     partials: ["CHANNEL", "MESSAGE"]
 });
