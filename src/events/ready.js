@@ -29,7 +29,7 @@ module.exports = {
 
 
         // Repeat every 20 minutes
-        cron.schedule("*\20 * * * *", async () => {
+        cron.schedule("*/20 * * * *", async () => {
             updateSubCount(client)
         })
 
