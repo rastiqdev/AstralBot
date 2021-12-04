@@ -12,6 +12,12 @@ module.exports = {
 
             if (!command) return;
 
+            if (command.voiceChannel) {
+                if (!interaction.member.voice.channel) return interaction.reply({content: `${interaction.user}, vous n'êtes pas dans un salon vocal. ❌`, ephemeral: true});
+
+                if (interaction.guild.me.voice.channel && interaction.member.voice.channel.id !== interaction.guild.me.voice.channel.id) return interaction.reply({content: `${interaction.user}, vous n'êtes pas dans le même salon vocal que moi. ❌`, ephemeral: true});
+            }
+
             try {
                 await command.execute(client, interaction);
             } catch (error) {
@@ -188,6 +194,15 @@ module.exports = {
                         await i.update({ content: "Opération annulée", components: [], ephemeral: true })
                     }
                 })
+            }else if (interaction.customId === "saveTrack") {
+                const queue = client.player.getQueue(interaction.guildId);
+                if (!queue || !queue.playing) return interaction.reply({ content: `Aucune musique est jouée. ❌`, ephemeral: true, components: [] });
+    
+                interaction.member.send(`Vous avez sauvegardé la musique ${queue.current.title} | ${queue.current.author} dans le serveur ${interaction.member.guild.name} ✅`).then(() => {
+                    return interaction.reply({ content: `Je vous ai envoyé le nom de la musique en DM ✅`, ephemeral: true, components: [] });
+                }).catch(error => {
+                    return interaction.reply({ content: `Je n'ai pas réussi à vous envoyer un DM ❌`, ephemeral: true, components: [] });
+                });
             }
         } else if (interaction.isSelectMenu()) {
             const { customId, values, member } = interaction;
