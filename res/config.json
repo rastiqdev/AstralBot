@@ -30,5 +30,6 @@
     ],
     "user": []
   },
-  "geniusApiKey": "RsPVeuHKQoBZL8mwINo5Rh0FX1ixwmTM4KjeF4PlWeEzmKDUHvGEOPv6vjjpiSK8"
+  "geniusApiKey": "RsPVeuHKQoBZL8mwINo5Rh0FX1ixwmTM4KjeF4PlWeEzmKDUHvGEOPv6vjjpiSK8",
+  "version": "1.0.0-beta1"
 }
