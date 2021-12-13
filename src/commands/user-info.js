@@ -4,15 +4,15 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('userinfo')
-		.setDescription('Avoir des informations à propos de quelqu\'un.')
-		.addUserOption(option => option.setName('utilisateur').setDescription('Utilisateur dont les informations doivent être montrées').setRequired(true)),
+		.setDescription('Avoir des informations à propos de quelqu\'un ou de soi-même.')
+		.addUserOption(option => option.setName('utilisateur').setDescription('Utilisateur dont les informations doivent être montrées')),
 	async execute(client, interaction) {
-		const user = interaction.options.getUser('utilisateur');
+		const user = interaction.options.getUser('utilisateur') || interaction.user;
 		const reply = new MessageEmbed()
 			.setColor('#0099ff')
 			.setTitle('Informations d\'utilisateur')
 			.setAuthor('AstralBot')
-			.setThumbnail(interaction.options.getUser('utilisateur').displayAvatarURL())
+			.setThumbnail(user.displayAvatarURL())
 			.addFields(
 				{ name: 'Utilisateur', value: user.username + "#" + user.discriminator},
 				{ name: 'ID', value: user.id},

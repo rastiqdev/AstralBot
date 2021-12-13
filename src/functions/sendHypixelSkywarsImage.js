@@ -23,14 +23,14 @@ module.exports = sendWelcomeImage = async function(interaction, player, username
   
         canvas.blit(avatar, 5, 5);
   
-        if (player.achievements.bedwars_level) {
-          canvas.print(Quantify_50_white, 158, 20, `Niveau ${player.achievements.bedwars_level}`);
+        if (player.stats.SkyWars.skywars_experience) {
+          canvas.print(Quantify_50_white, 158, 20, `Niveau ${await Math.trunc(await xpToLevel(player.stats.SkyWars.skywars_experience))}`);
         }
-        if (player.stats.Bedwars.kills_bedwars) {
-          canvas.print(Quantify_20_white, 158, 77, `Total de ${player.stats.Bedwars.kills_bedwars} kills`);
+        if (player.achievements.skywars_wins_solo) {
+          canvas.print(Quantify_20_white, 158, 77, `Total de ${player.achievements.skywars_wins_solo + player.achievements.skywars_wins_team} wins`);
         }
-        if (player.stats.Bedwars.deaths_bedwars) {
-          canvas.print(Quantify_20_white, 158, 105, `Total de ${player.stats.Bedwars.deaths_bedwars} morts`);
+        if (player.stats.SkyWars.losses_solo) {
+          canvas.print(Quantify_20_white, 158, 105, `Total de ${player.stats.SkyWars.losses_solo + player.stats.SkyWars.losses_team} parties perdues`);
         }
   
         const buffer = await canvas.getBufferAsync(Jimp.MIME_PNG);
@@ -48,4 +48,17 @@ module.exports = sendWelcomeImage = async function(interaction, player, username
         return console.log('HypixelGlobalImage => ',error);
       }
 
+}
+
+async function xpToLevel(xp) {
+  let xps = [0, 20, 70, 150, 250, 500, 1000, 2000, 3500, 6000, 10000, 15000];
+  if(xp >= 15000) {
+    return (xp - 15000) / 10000 + 12;
+  } else {
+    for(i = 0; i < xps.length; i++) {
+      if(xp < xps[i]) {
+        return i + (xp - xps[i-1]) / (xps[i] - xps[i-1]);
+      }
+    }
+  }
 }
