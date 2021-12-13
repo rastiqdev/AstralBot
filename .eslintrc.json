@@ -18,6 +18,7 @@
         "prefer-const": "error",
         "no-var": "error",
         "prettier/prettier": "error",
-        "eqeqeq": "error"
+        "eqeqeq": "error",
+        "require-await": "warn"
     }
 }

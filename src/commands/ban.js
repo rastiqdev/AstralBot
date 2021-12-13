@@ -38,7 +38,7 @@ module.exports = {
         ephemeral: true,
       });
     }
-    interaction.reply({
+    await interaction.reply({
       content:
         "Voulez-vous bannir " +
         user.user.username +

@@ -37,6 +37,6 @@ module.exports = {
           interaction.user.discriminator,
         interaction.user.displayAvatarURL
       );
-    return interaction.reply({ embeds: [reply] });
+    return await interaction.reply({ embeds: [reply] });
   },
 };

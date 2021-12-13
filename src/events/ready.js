@@ -28,7 +28,7 @@ module.exports = {
 
     // Repeat every 20 minutes
     cron.schedule("*/20 * * * *", async () => {
-      updateSubCount(client);
+      await updateSubCount(client);
     });
 
     const setPresence = function (number) {
@@ -46,7 +46,7 @@ module.exports = {
       }, 10000);
     }, 10000);
 
-    setInterval(async () => {
+    setInterval(() => {
       setPresence(0);
       setTimeout(function () {
         setPresence(1);
