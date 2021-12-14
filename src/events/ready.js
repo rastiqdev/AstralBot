@@ -26,8 +26,6 @@ module.exports = {
             "WATCHING"
         ]
 
-
-
         // Repeat every 20 minutes
         cron.schedule("*/20 * * * *", async () => {
             updateSubCount(client)

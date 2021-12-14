@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "deploy-commands": "node src/deploy-commands.js",
-    "test": "node test.js",
+    "test": "eslint --ext .js src/",
     "setup": "node src/setup.js"
   },
   "repository": {
@@ -29,7 +29,6 @@
     "discord-player": "^5.1.0",
     "discord.js": "^13.3.1",
     "dotenv": "^10.0.0",
-    "eslint": "^8.2.0",
     "eslint-config-google": "^0.14.0",
     "ffmpeg-static": "^4.4.0",
     "googleapis": "^92.0.0",

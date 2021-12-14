@@ -20,9 +20,9 @@ module.exports = {
         const embed = new MessageEmbed()
             .setAuthor(`Liste des warns de ${user.user.tag}`)
             .setColor("#0099ff")
-        if(!await client.warnsdb.has(`${user.id}`, "warns"))
+        if(!await client.warnsdb.has(`${user.id}`, "warns")) {
             embed.description = "Cet utilisateur n'a aucun warns.";
-        else {
+        }else {
             const warns = await client.warnsdb.get(`${user.id}`, "warns")
             embed.description = warns.map(warn => "- " + warn.reason).join("\n")
         }

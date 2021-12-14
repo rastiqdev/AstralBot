@@ -24,7 +24,7 @@ module.exports = handleSuggestionVotes = async function(interaction) {
     } else {
         votes.set(user, voteVal)
     }
-    await interaction.client.votesdb.set(interaction.message.id, votes,  "votes")
+    await interaction.client.votesdb.set(interaction.message.id, votes, "votes")
     const voteTotal = (Array.from(votes.values())).reduce((a, b) => a + b, 0)
 
     const embed = interaction.message.embeds[0]
