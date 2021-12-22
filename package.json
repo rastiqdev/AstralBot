@@ -23,7 +23,6 @@
   "dependencies": {
     "@discord-player/extractor": "^3.0.2",
     "@discordjs/rest": "^0.1.0-canary.0",
-    "@quick.eco/mongo": "^1.0.4",
     "canvas": "^2.8.0",
     "discord-api-types": "^0.24.0",
     "discord-player": "^5.1.0",
@@ -39,7 +38,6 @@
     "node-cron": "^3.0.0",
     "node-fetch": "^2.0.0",
     "opusscript": "^0.0.8",
-    "quick.eco": "^6.0.0",
     "quickmongo": "^4.0.0",
     "winston": "^3.3.3"
   }

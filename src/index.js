@@ -1,6 +1,5 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-const { EconomyManager } = require("quick.eco")
 const { MongoClient } = require("mongodb");
 const { Player } = require('discord-player');
 const quickmongo = require("quickmongo");
@@ -128,16 +127,6 @@ mongo.connect()
     // remove item
     // db.pull("userInfo", "Sword", "items").then(console.log);
     // -> { difficulty: 'Easy', items: ['Watch'], balance: 1000 }
-
-// ECONOMY
-
-client.eco = new EconomyManager({
-    adapter: 'mongo',
-    adapterOptions: {
-        collection: 'money', // => Collection Name
-        uri: process.env.MONGOURL // => Mongodb uri
-    }
-});
 
 // COMMANDS
 client.commands = new Collection();
