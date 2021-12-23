@@ -19,8 +19,7 @@ const client = new Client({
     Intents.FLAGS.GUILD_BANS,
     Intents.FLAGS.DIRECT_MESSAGES,
     Intents.FLAGS.GUILD_VOICE_STATES,
-  ],
-  partials: ["CHANNEL", "MESSAGE"],
+  ]
 });
 client.config = config;
 client.musicconfig = musicconfig;
