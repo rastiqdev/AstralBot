@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "deploy-commands": "node src/deploy-commands.js",
-    "test": "eslint --ext .js src/",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "setup": "node src/setup.js"
   },
   "repository": {
@@ -28,7 +29,6 @@
     "discord-player": "^5.1.0",
     "discord.js": "^13.3.1",
     "dotenv": "^10.0.0",
-    "eslint-config-google": "^0.14.0",
     "ffmpeg-static": "^4.4.0",
     "googleapis": "^92.0.0",
     "hypixel": "^1.0.3",
@@ -40,5 +40,11 @@
     "opusscript": "^0.0.8",
     "quickmongo": "^4.0.0",
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.5.1"
   }
 }
