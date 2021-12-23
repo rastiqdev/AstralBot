@@ -4,7 +4,7 @@ const { MongoClient } = require("mongodb");
 const { Player } = require('discord-player');
 const quickmongo = require("quickmongo");
 const config = require('../res/config.json')
-const musicconfig = require('./music/config');
+const musicconfig = require('../res/music-config');
 const winston = require("winston")
 
 require('dotenv').config();
@@ -181,7 +181,7 @@ client.player.on('channelEmpty', (queue) => {
     queue.metadata.send('Personne n\'est dans le salon vocal, je le quitte... ❌');
 });
 
-client.player.on('queueEnd', (queue) => {
+client.player.on('queueEnd', () => {
 });
 
 client.login(process.env.TOKEN);
