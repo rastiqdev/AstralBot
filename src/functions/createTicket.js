@@ -24,6 +24,14 @@ module.exports = async function (interaction) {
             Permissions.FLAGS.READ_MESSAGE_HISTORY,
           ],
         },
+        {
+          id: interaction.guild.roles.everyone,
+          deny: [
+            Permissions.FLAGS.SEND_MESSAGES,
+            Permissions.FLAGS.VIEW_CHANNEL,
+            Permissions.FLAGS.READ_MESSAGE_HISTORY,
+          ],
+        }
       ],
     }
   );
