@@ -29,5 +29,3 @@ jobs:
         heroku_app_name: 'astralbot-prod'
         # Contents of the Procfile to save and deploy
         procfile: 'Procfile'
-        # Path to an localized env file
-        env_file: '.env'
