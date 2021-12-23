@@ -60,10 +60,34 @@ module.exports = async function (interaction) {
     ],
   };
 
-  const message = await ticketChannel.send(messageData);
-  await message.pin();
-  const msg = await ticketChannel.send({
-    content: `<@${interaction.user.id}>`,
-  });
-  await msg.delete();
-};
+    const message = await ticketChannel.send(messageData)
+    await message.pin()
+    const msg = await ticketChannel.send({ content: `<@${interaction.user.id}>`})
+    await msg.delete()
+
+    const logsChannel = await (
+        await client.guilds.fetch(client.config.mainGuildId)).channels.fetch(client.config.logs.ticketsChannelId)
+    await logsChannel.send({
+        embeds: [
+            new MessageEmbed({
+                author: {
+                    name: "Nouveau ticket créé"
+                },
+                fields: [
+                    {
+                        name: "Utilisateur :",
+                        value: `${interaction.user.tag} (${interaction.user.id})`,
+                        inline: true
+                    },
+                    {
+                        name: "Ticket :",
+                        value: `<#${ticketChannel.id}> (${ticketChannel.name})`,
+                        inline: true
+                    }
+                ],
+                timestamp: Date.now(),
+                color: "#0099ff"
+            })
+        ]
+    })
+}
