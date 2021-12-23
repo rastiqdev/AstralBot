@@ -1,35 +1,37 @@
 {
-  "suggestionChannelId": "906186926208479273",
-  "verifChannelId": "906141002505535539",
-  "rolePannelChannelId": "906274132679860244",
-  "ticketChannelId": "911555243127472148",
-  "mainGuildId": "906119156334743582",
-  "welcomeChannelId": "906925355061895168",
-  "countingChannelId": "906842382048329778",
-  "ticketCategoryId": "911956726192963635",
-  "subCounterChannelId": "916452122017558588",
-  "viewsCounterChannelId": "916452429057388544",
+  "suggestionChannelId": "884520586527797249",
+  "verifChannelId": "923510741666000896",
+  "rolePannelChannelId": "853324293391122442",
+  "ticketChannelId": "900415812890943488",
+  "mainGuildId": "852223829840625744",
+  "welcomeChannelId": "903577017969180672",
+  "countingChannelId": "923515883173838849",
+  "ticketCategoryId": "923515285259038760",
+  "subCounterChannelId": "923509342454575134",
+  "viewsCounterChannelId": "923509400646320148",
   "astralYoutubeChannelId": "UCCJmvsUsf0Pnst0IzbARSBg",
   "logs": {
-    "messagesChannelId": "909860870216093698",
-    "modChannelId": "909860895918809129",
-    "vocalChannelId": "909860912389845012",
-    "joinsChannelId": "909860923123044412",
-    "ticketsChannelId": "909860958753669201",
-    "botChannelId": "909860969398829116"
+    "messagesChannelId": "852937143675519008",
+    "modChannelId": "852937143675519008",
+    "vocalChannelId": "852937143675519008",
+    "joinsChannelId": "852937143675519008",
+    "ticketsChannelId": "852937143675519008",
+    "botChannelId": "852937143675519008"
   },
   "mods": {
     "roles": [
-      "914460676167200778"
+      "853176148853653514",
+      "853334305149550623"
     ],
     "user": []
   },
   "admins": {
     "roles": [
-      "906124337415864360"
+      "867865612189696053",
+      "852224358381518850"
     ],
     "user": []
   },
   "geniusApiKey": "RsPVeuHKQoBZL8mwINo5Rh0FX1ixwmTM4KjeF4PlWeEzmKDUHvGEOPv6vjjpiSK8",
-  "version": "1.0.0-beta1"
+  "version": "1.0.0"
 }

@@ -200,7 +200,7 @@ module.exports = {
           });
         }
       } else if (interaction.customId === "selectsetup_validation") {
-        await interaction.member.roles.add("906149050510876674");
+        await interaction.member.roles.add("852939971820388357");
         await interaction.deferUpdate();
       } else if (
         interaction.customId === "upvote" ||
