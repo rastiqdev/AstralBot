@@ -38,6 +38,19 @@ module.exports = {
         ephemeral: true,
       });
     }
+    if (user.id === client.user.id) {
+      return interaction.reply({
+        content: "Vous ne pouvez pas m'expulser avec ma commande.",
+        ephemeral: true,
+      });
+    }
+
+    if (author.id === user.id) {
+      return interaction.reply({
+        content: "Vous ne pouvez pas vous expulser vous-même.",
+        ephemeral: true,
+      });
+    }
     await interaction.reply({
       content:
         "Voulez-vous expulser " +
