@@ -30,7 +30,7 @@ module.exports = {
 
     const user = interaction.options.getMember("utilisateur");
 
-    if (user.bot) {
+    if (user.user.bot) {
       return interaction.reply({
         content: "Vous ne pouvez pas warn des bots.",
         ephemeral: true,
