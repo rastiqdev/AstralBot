@@ -7,7 +7,7 @@ const config = require("../res/config.json");
 const musicconfig = require("../res/music-config");
 const winston = require("winston");
 
-require("dotenv").config();
+require("dotenv").config()
 
 // Discord client
 const client = new Client({
