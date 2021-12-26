@@ -1,4 +1,5 @@
 const sendSuggestion = require("../functions/sendSuggestion");
+const mexp = require("math-expression-evaluator");
 
 module.exports = {
   name: "messageCreate",
@@ -15,12 +16,17 @@ module.exports = {
         `${message.guild.id}`,
         "currentNumber"
       );
-      if (isNaN(message.content)) return message.delete();
+      if (!message.content) return message.delete();
       const authorid = await client.countdb.get(
         `${message.guild.id}`,
         "author"
       );
-      const proposedNumber = parseInt(message.content);
+      let proposedNumber;
+      try {
+        proposedNumber = mexp.eval(message.content);
+      } catch (e) {
+        return message.delete();
+      }
       if (message.author.id === authorid) return message.delete();
       if (proposedNumber - 1 !== currentNumber) return message.delete();
       await client.countdb.set(
