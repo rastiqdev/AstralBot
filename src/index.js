@@ -1,11 +1,11 @@
-const fs = require('fs');
-const { Client, Collection, Intents } = require('discord.js');
+const fs = require("fs");
+const { Client, Collection, Intents } = require("discord.js");
 const { MongoClient } = require("mongodb");
 const { Player } = require("discord-player");
 const quickmongo = require("quickmongo");
-const config = require('../res/config.json')
-const musicconfig = require('../res/music-config');
-const winston = require("winston")
+const config = require("../res/config.json");
+const musicconfig = require("../res/music-config");
+const winston = require("winston");
 
 require("dotenv").config();
 
@@ -19,7 +19,7 @@ const client = new Client({
     Intents.FLAGS.GUILD_BANS,
     Intents.FLAGS.DIRECT_MESSAGES,
     Intents.FLAGS.GUILD_VOICE_STATES,
-  ]
+  ],
 });
 client.config = config;
 client.musicconfig = musicconfig;
