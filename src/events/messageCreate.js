@@ -12,11 +12,12 @@ module.exports = {
     }
 
     if (message.channel.id === client.config.countingChannelId) {
+      if (!message.content) return message.delete();
+
       const currentNumber = await client.countdb.get(
         `${message.guild.id}`,
         "currentNumber"
       );
-      if (!message.content) return message.delete();
       const authorid = await client.countdb.get(
         `${message.guild.id}`,
         "author"
@@ -29,6 +30,10 @@ module.exports = {
       }
       if (message.author.id === authorid) return message.delete();
       if (proposedNumber - 1 !== currentNumber) return message.delete();
+
+      if (proposedNumber % 1000 === 0 || proposedNumber === 500)
+        await message.pin();
+
       await client.countdb.set(
         `${message.guild.id}`,
         proposedNumber,
