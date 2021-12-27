@@ -17,14 +17,15 @@ module.exports = {
     await channel.send({ embeds: [embed] });
 
     const activities = [
-      "s'abonner à Astral",
+      "s'abonner à Astral 🔔",
       `${
         (await client.guilds.fetch(client.config.mainGuildId)).memberCount
       } membres ! 🎉`,
       "RASTIQ & Léo-21",
+      `Version ${client.config.version} 🚀`,
     ];
 
-    const activprefix = ["PLAYING", "WATCHING", "WATCHING"];
+    const activprefix = ["PLAYING", "WATCHING", "WATCHING", "PLAYING"];
 
     // Repeat every 20 minutes
     cron.schedule("*/20 * * * *", async () => {
@@ -38,22 +39,13 @@ module.exports = {
       });
     };
 
-    setPresence(0);
-    setTimeout(function () {
-      setPresence(1);
-      setTimeout(function () {
-        setPresence(2);
-      }, 10000);
-    }, 10000);
+    let presenceCount = 0;
 
+    setPresence(presenceCount);
     setInterval(() => {
-      setPresence(0);
-      setTimeout(function () {
-        setPresence(1);
-        setTimeout(function () {
-          setPresence(2);
-        }, 10000);
-      }, 10000);
-    }, 30000);
+      presenceCount++;
+      if (presenceCount >= activities.length) presenceCount = 0;
+      setPresence(presenceCount);
+    }, 15000);
   },
 };
