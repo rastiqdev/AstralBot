@@ -19,7 +19,7 @@ module.exports = async function (client, member) {
       path.join(__dirname, "../../res/fonts/OpenSans_22_white.fnt")
     );
     const mask = await Jimp.read(
-      "https://raw.githubusercontent.com/CoderDixs/DraftBot/master/images/avatarMask.png"
+      "https://cloud.githubusercontent.com/assets/414918/11165709/051d10b0-8b0f-11e5-864a-20ef0bada8d6.png"
     );
 
     avatar.resize(136, Jimp.AUTO);
