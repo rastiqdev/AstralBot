@@ -40,7 +40,7 @@
     "node-cron": "^3.0.0",
     "node-fetch": "^2.0.0",
     "opusscript": "^0.0.8",
-    "quickmongo": "^4.0.0",
+    "quickmongo": "^5.1.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {
