@@ -24,7 +24,7 @@
   "homepage": "https://github.com/AQRRastiq/AstralBot#readme",
   "dependencies": {
     "@discord-player/extractor": "^3.0.2",
-    "@discordjs/rest": "^0.1.0-canary.0",
+    "@discordjs/rest": "^0.3.0",
     "canvas": "^2.8.0",
     "discord-api-types": "^0.27.2",
     "discord-player": "^5.2.0",
